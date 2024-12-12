@@ -1,26 +1,24 @@
+<!-- App.vue -->
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <NavbarComponent />
+    <!-- 네비게이션 바 추가 -->
+    <router-view></router-view>
+    <!-- 라우터에 따라 페이지 내용 표시 -->
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavbarComponent from "./components/Layout/NavbarComponent.vue"; // NavbarComponent 임포트
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    NavbarComponent, // 컴포넌트 등록
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+/* 여기에 앱 전체에 대한 스타일을 추가할 수 있습니다. */
 </style>
