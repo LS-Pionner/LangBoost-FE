@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import SentenceDetailView from "../views/SentenceDetailView.vue";
 import Page from "../views/Page.vue";
+import SignComponent from "@/components/Pages/auth/SignComponent.vue";
 
 const routes = [
   {
@@ -19,11 +20,16 @@ const routes = [
     name: "Page",
     component: Page,
   },
+  {
+    path: "/sign",
+    name: "SignComponent",
+    component: SignComponent    
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(), // HTML5 히스토리 모드
-  routes,
+  routes: routes,
 });
 
 export default router;
