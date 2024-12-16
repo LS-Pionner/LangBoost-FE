@@ -17,7 +17,7 @@
   
   <script>
   export default {
-    name: "LoginComponent",
+    name: "SignInComponent",
     data() {
       return {
         email: "",

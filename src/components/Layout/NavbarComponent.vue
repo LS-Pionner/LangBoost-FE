@@ -1,50 +1,83 @@
 <template>
-  <header class="navbar">
-    <nav>
-      <ul class="nav-list">
-        <!-- 'Home' 버튼 추가 -->
-        <li class="nav-item">
-          <!-- 'Home' 버튼을 클릭하면 '/'로 이동 -->
-          <router-link to="/" class="nav-link">Home</router-link>
-        </li>
-        <!-- 'Sentences' 버튼 -->
-        <li class="nav-item">
-          <!-- 'Sentences' 버튼을 클릭하면 '/sentences'로 이동 -->
-          <router-link to="/sentences" class="nav-link">Sentences</router-link>
-        </li>
-      </ul>
-    </nav>
-  </header>
+  <div class="container">
+    <div class="left-container">
+      <!-- 'Home' 버튼 추가 -->
+      <div class="item">
+        <!-- 'Home' 버튼을 클릭하면 '/'로 이동 -->
+        <router-link to="/" class="item-link">Home</router-link>
+      </div>
+      <!-- 'Sentences' 버튼 -->
+      <div class="item">
+        <!-- 'Sentences' 버튼을 클릭하면 '/sentences'로 이동 -->
+        <router-link to="/sentences" class="item-link">Sentences</router-link>
+      </div>
+    </div>
+
+    <div class="right-container">
+      <!-- '로그인, 회원가입' 버튼 -->
+      <div class="item" v-if="!isAuthenticated">
+        <SignComponent class="sign"/>
+      </div>
+      <!-- '로그아웃 버튼' -->
+      <div class="item" v-else>
+        <a class="item-link sign">Logout</a>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import store from '@/store';
+import { computed } from 'vue';
+import SignComponent from '../Pages/auth/SignComponent.vue';
+
 export default {
   name: "NavbarComponent",
+  components: {
+    SignComponent,
+  },
+  setup() {
+    const isAuthenticated = computed(() => store.state.isAuthenticated);
+    
+    return {
+      isAuthenticated,
+    };
+  },
 };
 </script>
 
 <style scoped>
 /* 네비게이션 바 스타일 */
-.navbar {
+.container {
   background-color: #1e90ff;
   padding: 15px 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 중앙 정렬 */
+  position: relative;
+  height: 25px;
 }
 
-.nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+
+.left-container {
   display: flex;
   justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);  /* 중앙으로 정렬 */
 }
 
-.nav-item {
+.right-container {
+  display: flex;
+  margin-left: auto;  /* 오른쪽 컨테이너를 오른쪽으로 밀어냄 */
+}
+
+.item {
   margin: 0 10px;
 }
 
-.nav-link {
+.item-link {
   color: white;
   text-decoration: none;
   font-size: 18px;
@@ -54,7 +87,24 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.nav-link:hover {
+.item-link:hover {
+  background-color: #4682b4;
+}
+
+.sign {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 10px; /* padding 대신 margin 사용 */
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+
+.sign:hover {
   background-color: #4682b4;
 }
 </style>
