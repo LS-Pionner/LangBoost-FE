@@ -20,7 +20,7 @@
       </div>
       <!-- '로그아웃 버튼' -->
       <div class="item" v-else>
-        <a class="item-link sign">Logout</a>
+        <a class="item-link sign" @click="logout()">Logout</a>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@
 import store from '@/store';
 import { computed } from 'vue';
 import SignComponent from '../Pages/auth/SignComponent.vue';
+import instance from '@/axios';
 
 export default {
   name: "NavbarComponent",
@@ -38,9 +39,24 @@ export default {
   },
   setup() {
     const isAuthenticated = computed(() => store.state.isAuthenticated);
+
+    // 로그아웃
+    const logout = () => {
+      instance.post("/api/v1/auth/logout").then((res) => {
+        console.log(res.data);
+        store.dispatch("logout");
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          store.dispatch("logout");
+        } else {
+          console.log("로그아웃 중 에러가 발생했습니다.");
+        }
+      });
+    };
     
     return {
       isAuthenticated,
+      logout,
     };
   },
 };
