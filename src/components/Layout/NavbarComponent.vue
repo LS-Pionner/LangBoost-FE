@@ -16,7 +16,7 @@
     <div class="right-container">
       <!-- '로그인, 회원가입' 버튼 -->
       <div class="item" v-if="!isAuthenticated">
-        <SignComponent class="sign"/>
+        <router-link to="/sign" class="sign">Login</router-link>
       </div>
       <!-- '로그아웃 버튼' -->
       <div class="item" v-else>
@@ -29,21 +29,16 @@
 <script>
 import store from '@/store';
 import { computed } from 'vue';
-import SignComponent from '../Pages/auth/SignComponent.vue';
 import instance from '@/axios';
 
 export default {
   name: "NavbarComponent",
-  components: {
-    SignComponent,
-  },
   setup() {
     const isAuthenticated = computed(() => store.state.isAuthenticated);
 
     // 로그아웃
     const logout = () => {
-      instance.post("/api/v1/auth/logout").then((res) => {
-        console.log(res.data);
+      instance.post("/api/v1/auth/logout").then(() => {
         store.dispatch("logout");
       }).catch((error) => {
         if (error.response.status === 401) {
@@ -74,7 +69,6 @@ export default {
   position: relative;
   height: 25px;
 }
-
 
 .left-container {
   display: flex;

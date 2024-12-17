@@ -1,38 +1,44 @@
 <template>
-  <div>
-    <div class="item" @click="showModal = true">Sign</div>
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <!-- 모달창 닫기 -->
-        <span class="close" @click="showModal = false">&times;</span>
-        <!-- 로그인, 회원가입 선택 -->
-        <div class="tab">
-          <button class="tablinks" @click="changeTab('login')" :class="{ active: activeTab === 'login' }">로그인</button>
-          <button class="tablinks" @click="changeTab('register')" :class="{ active:activeTab === 'register' }">회원가입</button>
+  <div :class="['container', { 'right-panel-active': isActive }]">
+    <!-- 회원가입 컨테이너 -->
+    <div class="form-container sign-up-container">
+      <div class="sign-form">
+        <h1>Create Account</h1>
+        <span>type your email for registration</span>
+        <div class="email-container">
+          <input type="email" class="email" placeholder="Type your Email" v-model="registerForm.form.email" />
+          <button class="duplicate-check" @click="emailCheck()">중복 확인</button>
         </div>
-
-        <!-- 로그인 탭 선택한 경우 -->
-        <div v-show="activeTab === 'login'" class="tabContent">
-          <form @submit.prevent="login">
-            <label for="login-email">이메일</label>
-            <input type="email" id="login-email" v-model="loginForm.username" required>
-            <label for="login-password">비밀번호</label>
-            <input type="password" id="login-password" v-model="loginForm.password" required>
-            <button type="submit">로그인</button>
-          </form>
+        <small v-if="registerForm.message" :class="{'text-available': registerForm.messageType === 'available', 'text-unusable': registerForm.messageType === 'unusable'}">{{ registerForm.message }}</small>
+        <input type="password" class="password" placeholder="******" v-model="registerForm.form.password" />
+        <input type="password" class="password-confirm" placeholder="******" v-model="registerForm.form.passwordConfirm" />
+        <small v-if="!isCorrect" class="text-unusable">비밀번호가 일치하지 않습니다.</small>
+        <button @click="register()">Sign up</button>
+      </div>
+    </div>
+    <!-- 로그인 컨테이너 -->
+    <div class="form-container sign-in-container">
+      <div class="sign-form">
+        <h1>Sign in</h1>
+        <span>Type your account</span>
+        <input type="email" placeholder="Email" @keyup.enter="login()" v-model="loginForm.form.username" />
+        <input type="password" placeholder="******" @keyup.enter="login()" v-model="loginForm.form.password" />
+        <a href="#">Forgot your password?</a>
+        <button @click="login()">Sign in</button>
+      </div>
+    </div>
+    <!-- 패널 변경 컨테이너 -->
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>Welcome back!</h1>
+          <p>To keep connected with us, please sign in</p>
+          <button class="ghost" @click="activePanel(false)">Sign in</button>
         </div>
-        <!-- 회원가입 탭 선택한 경우 -->
-        <div v-show="activeTab === 'register'" class="tabContent">
-          <form @submit.prevent="register">
-            <label for="register-email">이메일</label>
-            <input type="email" id="register-email" v-model="registerForm.email" required>
-            <label for="register-password">비밀번호</label>
-            <input type="password" id="register-password" v-model="registerForm.password" required>
-            <label for="register-password-confirm">비밀번호 확인</label>
-            <input type="password" id="register-password-confirm" v-model="registerForm.passwordConfirm" required>
-            <small v-if="!isPasswordMatched" class="password__match">비밀번호가 일치하지 않습니다.</small>
-            <button type="submit">회원가입</button>
-          </form>
+        <div class="overlay-panel overlay-right">
+          <h1>Hello, Friend!</h1>
+          <p>Use our service for free!</p>
+          <button class="ghost" @click="activePanel(true)">Sign up</button>
         </div>
       </div>
     </div>
@@ -45,215 +51,370 @@ import store from '@/store';
 import axios from '@/axios';
 import { computed, reactive, ref, watchEffect } from 'vue';
 
-  export default {
-    name: "SignComponent",
-    setup() {
-      const isAuthenticated = computed(() => store.state.isAuthenticated);  // 인증 상태
-      const showModal = ref(false); // 모달 창이 띄워져 있는지 여부
-      const activeTab = ref("login"); // 탭 구분 (기본은 로그인 탭)
-      const isPasswordMatched = computed(() => {  // 비밀번호 일치 여부
-        return registerForm.password === registerForm.passwordConfirm;
-      });
+export default {
+  name: "SignComponent",
+  setup() {
+    const isAuthenticated = computed(() => store.state.isAuthenticated);  // 인증 상태
+    const isActive = ref(false);  // 패널 상태
+    const isCorrect = ref(true);  // 비밀번호 일치 여부 상태
 
-      const loginForm = reactive({
+      // 패널 상태 변경 함수
+    const activePanel = (status) => {
+      isActive.value = status;
+    }
+    
+    // 비밀번호 일치 여부 확인
+    const correctPassword = (status) => {
+      isCorrect.value = status;
+    }
+
+    const loginForm = reactive({
+      form: {
         username: "",
         password: ""
-      });
+      }
+    });
 
-      const registerForm = reactive({
+    const registerForm = reactive({
+      form: {
         email: "",
         password: "",
         passwordConfirm: "",
-      });
+      },
+      message: "",
+      messageType: "",
+    });
 
-      // 탭 활성화 함수
-      const changeTab = (tab) => {
-        activeTab.value = tab;
-      };
+    // 로그인 한 사용자가 다시 로그인 할 수 없도록 라우팅
+    watchEffect(() => {
+      if (isAuthenticated.value) {  // 이미 인증된 사용자는 홈으로 라우팅
+        router.push({ path: "/" });
+      }
+    });
 
-      // 로그인 한 사용자가 다시 로그인 할 수 없도록 라우팅
-      watchEffect(() => {
-        if (isAuthenticated.value) {  // 이미 인증된 사용자는 홈으로 라우팅
-          router.push({ path: "/" });
-        }
-      });
+    // 로그인 API 호출
+    const login = () => {
+      const isFormFilled = loginForm.form.username && loginForm.form.password;
 
-      // 로그인 API 호출
-      const login = () => {
-        axios.post("/api/v1/login", loginForm).then((res) => {
-          const authorizationHeader = res.headers['authorization'];
-          const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
+      if (!isFormFilled) {
+        window.alert("모든 필드를 채워주세요.");
+        return;
+      }
 
-          if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-            store.dispatch("initAuthentication");
-          }
+      axios.post("/api/v1/login", loginForm.form).then((res) => {
+        const authorizationHeader = res.headers['authorization'];
+        const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
 
-        }).catch((error) => {
-          if (error.response && error.response.data) {
-            window.alert(error.response.data.error.message);
-          } else {
-            window.alert("로그인에 실패했습니다.");
-          }
-        });
-      };
-
-      // 회원가입 API 호출
-      const register = () => {
-        // 비밀번호 일치 여부 확인
-        if (!isPasswordMatched.value) {
-          return;
+        if (accessToken) {
+          localStorage.setItem("accessToken", accessToken);
+          store.dispatch("initAuthentication");
+          router.push({ path: "/" }); // 메인 페이지로 이동
+        } else {
+          window.alert("유효하지 않은 토큰입니다.");
         }
 
-        axios.post("/api/v1/register", registerForm).then((res) => {
-          window.alert(res.data.payload);
-          // 로그인 탭으로 변경
-          changeTab("login");
-        }).catch((error) => {
-          if (error.response && error.response.data) {
-            window.alert(error.response.data.error.message);
-          } else {
-            window.alert("사용할 수 없는 이메일입니다.");
-          }
-        });
-      };
+      }).catch((error) => {
+        if (error.response && error.response.data) {
+          window.alert(error.response.data.error.message);
+        } else {
+          window.alert("로그인에 실패했습니다.");
+        }
+      });
+    };
 
-      return {
-        isAuthenticated,
-        showModal,
-        activeTab,
-        isPasswordMatched,
-        loginForm,
-        registerForm,
-        changeTab,
-        login,
-        register,
-      };
-    },
-  }
+    // 회원가입 API 호출
+    const register = () => {
+      correctPassword(true);
+      const isFormFilled = registerForm.form.email && registerForm.form.password &&
+          registerForm.form.passwordConfirm;
+
+      if (!isFormFilled) {
+        window.alert("모든 필드를 채워주세요.");
+        return;
+      }
+
+      // 비밀번호 일치 여부 확인
+      if (registerForm.form.password !== registerForm.form.passwordConfirm) {
+        correctPassword(false);
+        return;
+      }
+
+      axios.post("/api/v1/register", registerForm.form).then((res) => {
+        correctPassword(true);
+        window.alert(res.data.payload);
+        registerForm.message = "";
+        registerForm.messageType = "";
+        // 로그인 탭으로 변경
+        activePanel(false);
+      }).catch((error) => {
+        if (error.response && error.response.data) {
+          window.alert(error.response.data.error.message);
+          registerForm.messageType = "unusable";
+        } else {
+          window.alert("사용할 수 없는 이메일입니다.");
+          registerForm.messageType = "unusable";
+        }
+      });
+    };
+
+    return {
+      isAuthenticated,
+      isActive,
+      isCorrect,
+      activePanel,
+      correctPassword,
+      loginForm,
+      registerForm,
+      login,
+      register,
+    };
+  },
+}
 </script>
 
 <style scoped>
-.modal {
-  display: block;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4); /* 배경을 어둡게 */
-  color: black;
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+  box-sizing: border-box;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  position: absolute; /* absolute 위치 지정 */
-  top: 15%; /* 모달창 뜨는 위치 설정 */
-  left: 50%;
-  transform: translate(-50%, 0); /* 수평 중앙 정렬 */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 400px;
-  border-radius: 5px;
-  z-index: 1001; /* 모달 내용이 배경보다 앞에 오도록 */
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.tab {
-  overflow: hidden;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 25px;
-}
-
-.tab button {
-  background-color: inherit;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-.tab button:hover {
-  background-color: #ddd;
-}
-
-.tab button.active {
-  background-color: #ccc;
-}
-
-.tabcontent {
-  display: none;
-}
-
-.tabcontent {
-  display: block;
-}
-
-form {
+body {
+  background: #f6f5f7;
   display: flex;
+  justify-content: center;
   flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
 }
 
-form label {
-  margin-bottom: 5px;
+h1 {
+  font-weight: bold;
+  margin: 0;
 }
 
-form input, form select {
-  margin-bottom: 20px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
 }
 
-form button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background-color: #28a745;
-  color: white;
+span {
+  font-size: 12px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+button {
+  border-radius: 20px;
+  border: 1px solid #FF4B2B;
+  background-color: #FF4B2B;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
   cursor: pointer;
-  margin-top: 10px; 
 }
 
-form button:hover {
-  background-color: #218838;
+button:active {
+  transform: scale(0.95);
 }
 
-.password__match {
-  font-size: 15px;
-  color: #ff4b2b;
-  padding-left: 8px;
-  margin-bottom: 1.5rem;
+button:focus {
+  outline: none;
 }
 
-.info__birth {
+button.ghost {
+  background-color: transparent;
+  border-color: #FFFFFF;
+}
+
+.sign-form {
+  background-color: #FFFFFF;
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
 }
 
-.info__birth select {
-  margin-right: 20px;
+.email-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
 }
 
-.info__gender label {
-  margin-right: 20px;
+.duplicate-check {
+  border: 1px solid #FF416C;
+  background-color: #FF416C;
+}
+
+.text-available {
+  color: rgb(51, 51, 253);
+}
+
+.text-unusable {
+  color: #FF4B2B;
+}
+
+input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 75%;
+}
+
+.email {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.container.right-panel-active .overlay-container{
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background: #FF416C;
+  background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #FFFFFF;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+    transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+.social-container {
+  margin: 20px 0;
+}
+
+.social-container a {
+  border: 1px solid #DDDDDD;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
 }
 </style>
