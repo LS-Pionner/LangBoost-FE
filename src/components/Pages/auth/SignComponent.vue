@@ -92,6 +92,22 @@ export default {
       }
     });
 
+    // 이메일 중복 확인 API 호출
+    const emailCheck = () => {
+      axios.get(`/api/v1/email-check?email=${registerForm.form.email}`).then((res) => {
+        registerForm.message = res.data.payload;
+        registerForm.messageType = "available";
+      }).catch((error) => {
+        if (error.response && error.response.data) {
+          registerForm.message = error.response.data.error.message;
+          registerForm.messageType = "unusable";
+        } else {
+          registerForm.message = "사용할 수 없는 이메일입니다.";
+          registerForm.messageType = "unusable";
+        }
+      });
+    };
+
     // 로그인 API 호출
     const login = () => {
       const isFormFilled = loginForm.form.username && loginForm.form.password;
@@ -165,6 +181,7 @@ export default {
       correctPassword,
       loginForm,
       registerForm,
+      emailCheck,
       login,
       register,
     };
