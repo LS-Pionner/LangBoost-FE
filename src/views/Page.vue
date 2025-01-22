@@ -4,6 +4,10 @@
       <h1>Sentence List</h1>
     </header>
 
+    <div class="side-content">
+      <router-link to="/new-sentence">문장추가</router-link>
+    </div>
+
     <main class="page-content">
       <!-- Sorting Component -->
       <SortingSentenceComponent />
@@ -57,5 +61,14 @@ export default {
   max-width: 800px;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.side-content {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

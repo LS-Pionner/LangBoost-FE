@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import SentenceDetailView from "../views/SentenceDetailView.vue";
 import Page from "../views/Page.vue";
 import SignComponent from "@/components/Pages/auth/SignComponent.vue";
+import AddSentence from "@/components/Pages/Sentences/AddSentence.vue";
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: "/sentences",
     name: "Page",
     component: Page,
+  },
+  {
+    path: "/new-sentence",
+    name: "AddSentence",
+    component: AddSentence,
   },
   {
     path: "/sign",

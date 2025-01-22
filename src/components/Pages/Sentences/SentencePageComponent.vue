@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from '@/axios';
 
 export default {
   name: "InfiniteScrollSentences",
@@ -46,12 +46,12 @@ export default {
       // API에서 문장 데이터를 가져오는 함수
       if (this.isLastPage || this.loading) return;
 
-      console.log("API URL:", process.env.VUE_APP_SERVER_API_BASE_URL_V1);
+      // console.log("API URL:", process.env.VUE_APP_SERVER_API_BASE_URL_V1);
       // 서버 환경 변수 설정
-      const apiBaseURL = process.env.VUE_APP_SERVER_API_BASE_URL_V1;
+      // const apiBaseURL = process.env.VUE_APP_SERVER_API_BASE_URL_V1;
 
       axios
-        .get(`${apiBaseURL}/sentences?page=${this.page}`) // 문자열 보간법을 사용하여 URL 설정
+        .get(`api/v1/sentences?page=${this.page}`) // 문자열 보간법을 사용하여 URL 설정
         .then((response) => {
           if (response.data.success) {
             const data = response.data.payload;
