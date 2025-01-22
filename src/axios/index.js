@@ -2,7 +2,7 @@ import store from "@/store";
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080", // 기본 URL 경로
+  baseURL: process.env.VUE_APP_SERVER_API_BASE_URL_V1, // 기본 URL 경로
   withCredentials: true,
 });
 
@@ -35,7 +35,7 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const res = await axios.post("/api/v1/auth/reissue", {}, { withCredentials: true });
+        const res = await axios.post("/auth/reissue", {}, { withCredentials: true });
 
         if (res.status === 403 || res.status === 40201 || res.status === 40202) { // 리프레시 토큰이 유효하지 않을 경우
           store.dispatch("logout"); // 로그아웃
