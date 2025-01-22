@@ -30,6 +30,7 @@
 import store from '@/store';
 import { computed } from 'vue';
 import instance from '@/axios';
+import router from '@/router';
 
 export default {
   name: "NavbarComponent",
@@ -40,6 +41,7 @@ export default {
     const logout = () => {
       instance.post("/api/v1/auth/logout").then(() => {
         store.dispatch("logout");
+        router.push({ path: "/" });
       }).catch((error) => {
         if (error.response.status === 401) {
           store.dispatch("logout");
