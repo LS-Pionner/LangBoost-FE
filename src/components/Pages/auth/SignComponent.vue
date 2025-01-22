@@ -94,7 +94,7 @@ export default {
 
     // 이메일 중복 확인 API 호출
     const emailCheck = () => {
-      axios.get(`/api/v1/email-check?email=${registerForm.form.email}`).then((res) => {
+      axios.get(`/api/v1/auth/email-check?email=${registerForm.form.email}`).then((res) => {
         registerForm.message = res.data.payload;
         registerForm.messageType = "available";
       }).catch((error) => {
@@ -117,7 +117,7 @@ export default {
         return;
       }
 
-      axios.post("/api/v1/login", loginForm.form).then((res) => {
+      axios.post("/api/v1/auth/login", loginForm.form).then((res) => {
         const authorizationHeader = res.headers['authorization'];
         const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
 
@@ -155,7 +155,7 @@ export default {
         return;
       }
 
-      axios.post("/api/v1/register", registerForm.form).then((res) => {
+      axios.post("/api/v1/auth/register", registerForm.form).then((res) => {
         correctPassword(true);
         window.alert(res.data.payload);
         registerForm.message = "";

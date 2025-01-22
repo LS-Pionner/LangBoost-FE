@@ -2,7 +2,7 @@ import store from "@/store";
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8081", // 기본 URL 경로
+  baseURL: "http://localhost:8080", // 기본 URL 경로
   withCredentials: true,
 });
 
@@ -28,8 +28,6 @@ instance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log('>>>>', error);
-    
     const originalRequest = error.config;
     
     // 토큰이 유효하지 않으면 refresh token으로 재발급
