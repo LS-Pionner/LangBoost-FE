@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import SentenceDetailView from "../views/SentenceDetailView.vue";
 import Page from "../views/Page.vue";
+import SignComponent from "@/components/Pages/auth/SignComponent.vue";
+import AddSentence from "@/components/Pages/Sentences/AddSentence.vue";
 
 const routes = [
   {
@@ -19,11 +21,21 @@ const routes = [
     name: "Page",
     component: Page,
   },
+  {
+    path: "/new-sentence",
+    name: "AddSentence",
+    component: AddSentence,
+  },
+  {
+    path: "/sign",
+    name: "SignComponent",
+    component: SignComponent    
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(), // HTML5 히스토리 모드
-  routes,
+  routes: routes,
 });
 
 export default router;
