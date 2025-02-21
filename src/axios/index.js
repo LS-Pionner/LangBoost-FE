@@ -31,15 +31,25 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
     
     // 토큰이 유효하지 않으면 refresh token으로 재발급
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if ((error.response && error.response.status === 401 && !originalRequest._retry) || error.response.data.error.code === 40101) {
+      console.log(error.response);
+      
       originalRequest._retry = true;
 
+      // 쿠키에서 리프레시 토큰 가져오기
+      const refreshToken = getCookie("RefreshToken");      
+
       try {
-        const res = await axios.post("/auth/reissue", {}, { withCredentials: true });
+        const res = await instance.post("/api/v1/auth/reissue", {}, {
+          headers: {
+            RefreshToken: refreshToken // 헤더에 리프레시 토큰을 추가
+          },
+          withCredentials: true
+        });
 
         if (res.status === 403 || res.status === 40201 || res.status === 40202) { // 리프레시 토큰이 유효하지 않을 경우
           store.dispatch("logout"); // 로그아웃
-          return Promise.reject(error);
+          return Promise.reject(error.response.data);
         }
 
         const newAuthorizationHeader = res.headers["authorization"];
@@ -58,8 +68,15 @@ instance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error.response ? error.response.data : error);
   }
 );
+
+// 쿠키에서 값 가져오는 함수
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 export default instance;
