@@ -1,25 +1,31 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import SentenceDetailView from "../views/SentenceDetailView.vue";
-import Page from "../views/Page.vue";
-import SignComponent from "@/components/Pages/auth/SignComponent.vue";
-import AddSentence from "@/components/Pages/Sentences/AddSentence.vue";
+import HomePage from "@/views/HomePage.vue";
+import SentenceDetailPage from "@/views/SentenceDetailPage.vue";
+import SentenceSetPage from "@/views/SentenceSetPage.vue";
+import SignComponent from "@/views/auth/SignComponent.vue";
+import AddSentence from "@/components/pages/sentences/AddSentence.vue";
+import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
 
 const routes = [
   {
     path: "/", // URL 경로
-    name: "Home", // 라우트 이름 (선택 사항)
-    component: Home, // 연결할 컴포넌트
+    name: "HomePage", // 라우트 이름 (선택 사항)
+    component: HomePage, // 연결할 컴포넌트
   },
   {
-    path: "/sentence/:sentenceId",
-    name: "SentenceDetailView",
-    component: SentenceDetailView,
+    path: "/public/sentence-set/:sentenceId",
+    name: "SentenceDetailPage",
+    component: SentenceDetailPage,
+  },
+  {
+    path: "/public/sentence-set/list",
+    name: "PublicSentenceSetPage",
+    component: PublicSentenceSetPage
   },
   {
     path: "/sentences",
-    name: "Page",
-    component: Page,
+    name: "SentenceSetPage",
+    component: SentenceSetPage,
   },
   {
     path: "/new-sentence",
