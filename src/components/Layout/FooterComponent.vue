@@ -1,65 +1,162 @@
 <template>
-  <footer class="footer">
-    <nav>
-      <ul class="footer-list">
-        <!-- 'Contact Us' 버튼 추가 -->
-        <li class="footer-item">
-          <!-- 'Contact Us' 버튼을 클릭하면 '/contact'로 이동 -->
-          <router-link to="/contact" class="footer-link"
-            >Contact Us</router-link
-          >
-        </li>
-        <!-- 'About' 버튼 -->
-        <li class="footer-item">
-          <!-- 'About' 버튼을 클릭하면 '/about'로 이동 -->
-          <router-link to="/about" class="footer-link">About</router-link>
-        </li>
-      </ul>
-    </nav>
-  </footer>
+  <div class="footer">
+    <div class="content">
+      <div class="logo">
+        <CompanyLogo class="company-logo" />
+      </div>
+
+      <div class="navbar">
+        <!-- <div class="text-wrapper">About Us</div>
+        <div class="text-wrapper">Contact Us</div>
+        <div class="text-wrapper">Help Center</div>
+        <div class="text-wrapper">Blog Posts</div>
+        <div class="text-wrapper">Language Tips</div> -->
+      </div>
+
+      <div class="social-links"></div>
+    </div>
+
+    <div class="credits">
+      <div class="divider" />
+      <div class="div">
+        <p class="p">© 2025 LangBoost. All rights reserved.</p>
+        <div class="text-wrapper-2">Privacy Policy</div>
+        <div class="text-wrapper-2">Terms of Use</div>
+        <div class="text-wrapper-2">Cookie Settings</div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  name: "FooterComponent",
-};
+<script setup>
+import CompanyLogo from "@/components/UI/CompanyLogo.vue";
 </script>
 
-<style scoped>
-/* 푸터 스타일 */
+<style>
 .footer {
-  background-color: #1e90ff;
-  padding: 15px 0;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}
-
-.footer-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  align-items: center;
+  background-color: var(--semantic-background-color-primary);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 80px;
+  padding: 80px 64px;
+  position: relative;
+  width: 1440px;
 }
 
-.footer-item {
-  margin: 0 10px;
+.footer .content {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 32px;
+  position: relative;
+  width: 100%;
 }
 
-.footer-link {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+.footer .logo {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 24px;
+  position: relative;
 }
 
-.footer-link:hover {
-  background-color: #4682b4;
+.footer .company-logo {
+  height: 36px !important;
+  position: relative !important;
+  width: 84px !important;
+}
+
+.footer .navbar {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 32px;
+  position: relative;
+}
+
+.footer .text-wrapper {
+  color: var(--semantic-link-primary);
+  font-family: var(--text-small-semi-bold-font-family);
+  font-size: var(--text-small-semi-bold-font-size);
+  font-style: var(--text-small-semi-bold-font-style);
+  font-weight: var(--text-small-semi-bold-font-weight);
+  letter-spacing: var(--text-small-semi-bold-letter-spacing);
+  line-height: var(--text-small-semi-bold-line-height);
+  margin-top: -1px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.footer .social-links {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  gap: 12px;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.footer .credits {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+  width: 100%;
+}
+
+.footer .divider {
+  align-self: stretch;
+  background-color: var(--semantic-border-primary);
+  border: 1px solid;
+  border-color: var(--semantic-border-primary);
+  height: 1px;
+  position: relative;
+  width: 100%;
+}
+
+.footer .div {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 24px;
+  position: relative;
+}
+
+.footer .p {
+  color: var(--semantic-text-primary);
+  font-family: var(--text-small-normal-font-family);
+  font-size: var(--text-small-normal-font-size);
+  font-style: var(--text-small-normal-font-style);
+  font-weight: var(--text-small-normal-font-weight);
+  letter-spacing: var(--text-small-normal-letter-spacing);
+  line-height: var(--text-small-normal-line-height);
+  margin-top: -1px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.footer .text-wrapper-2 {
+  color: var(--semantic-link-primary);
+  font-family: var(--text-small-link-font-family);
+  font-size: var(--text-small-link-font-size);
+  font-style: var(--text-small-link-font-style);
+  font-weight: var(--text-small-link-font-weight);
+  letter-spacing: var(--text-small-link-letter-spacing);
+  line-height: var(--text-small-link-line-height);
+  margin-top: -1px;
+  position: relative;
+  text-decoration: underline;
+  white-space: nowrap;
+  width: fit-content;
 }
 </style>

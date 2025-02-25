@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "@/views/HomeView.vue";
 import SentenceDetailView from "../views/SentenceDetailView.vue";
 import Page from "../views/Page.vue";
 import SignComponent from "@/components/Pages/auth/SignComponent.vue";
@@ -29,7 +29,7 @@ const routes = [
   {
     path: "/sign",
     name: "SignComponent",
-    component: SignComponent    
+    component: SignComponent,
   },
 ];
 

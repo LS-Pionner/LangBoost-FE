@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import store from '@/store';
-import { computed } from 'vue';
-import instance from '@/axios';
-import router from '@/router';
+import store from "@/store";
+import { computed } from "vue";
+import instance from "@/axios";
+import router from "@/router";
 
 export default {
   name: "NavbarComponent",
@@ -39,18 +39,21 @@ export default {
 
     // 로그아웃
     const logout = () => {
-      instance.post("/api/v1/auth/logout").then(() => {
-        store.dispatch("logout");
-        router.push({ path: "/" });
-      }).catch((error) => {
-        if (error.response.status === 401) {
+      instance
+        .post("/api/v1/auth/logout")
+        .then(() => {
           store.dispatch("logout");
-        } else {
-          console.log("로그아웃 중 에러가 발생했습니다.");
-        }
-      });
+          router.push({ path: "/" });
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            store.dispatch("logout");
+          } else {
+            console.log("로그아웃 중 에러가 발생했습니다.");
+          }
+        });
     };
-    
+
     return {
       isAuthenticated,
       logout,
@@ -77,12 +80,12 @@ export default {
   justify-content: center;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);  /* 중앙으로 정렬 */
+  transform: translateX(-50%); /* 중앙으로 정렬 */
 }
 
 .right-container {
   display: flex;
-  margin-left: auto;  /* 오른쪽 컨테이너를 오른쪽으로 밀어냄 */
+  margin-left: auto; /* 오른쪽 컨테이너를 오른쪽으로 밀어냄 */
 }
 
 .item {
@@ -115,8 +118,7 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-
 .sign:hover {
-  background-color: #4682b4;
+  background-color: #2f80ed;
 }
 </style>
