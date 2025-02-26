@@ -1,3 +1,4 @@
+import router from "@/router";
 import store from "@/store";
 import axios from "axios";
 
@@ -31,40 +32,54 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
     
     // 토큰이 유효하지 않으면 refresh token으로 재발급
-    if ((error.response && error.response.status === 401 && !originalRequest._retry) || error.response.data.error.code === 40101) {
-      console.log(error.response);
+    if (error.response) {
+      const { status, data } = error.response;
       
-      originalRequest._retry = true;
+      // 토큰이 유효하지 않은 경우
+      if (status === 401 && data.error.code === 40101) {
+        console.log("Unauthorized: User is not logged in.");
+        window.alert("로그인 후 이용 가능합니다.");
+        store.dispatch("logout"); // 로그아웃 처리
+        router.push({ path: '/sign' }); // 로그인 페이지로 이동
+        return Promise.reject(data);
+      }
 
-      // 쿠키에서 리프레시 토큰 가져오기
-      const refreshToken = getCookie("RefreshToken");      
-
-      try {
-        const res = await instance.post("/api/v1/auth/reissue", {}, {
-          headers: {
-            RefreshToken: refreshToken // 헤더에 리프레시 토큰을 추가
-          },
-          withCredentials: true
-        });
-
-        if (res.status === 403 || res.status === 40201 || res.status === 40202) { // 리프레시 토큰이 유효하지 않을 경우
-          store.dispatch("logout"); // 로그아웃
-          return Promise.reject(error.response.data);
+      // 토큰이 만료된 경우 리프레시 토큰으로 재발급 API 요청
+      if (status === 401 && data.error.code === 40102 && !originalRequest._retry) {
+        console.log(error.response);
+        
+        originalRequest._retry = true;
+  
+        // 쿠키에서 리프레시 토큰 가져오기
+        const refreshToken = getCookie("RefreshToken");      
+  
+        try {
+          const res = await instance.post("/api/v1/auth/reissue", {}, {
+            headers: {
+              RefreshToken: refreshToken // 헤더에 리프레시 토큰을 추가
+            },
+            withCredentials: true
+          });
+  
+          if (res.status === 403 || res.status === 40201 || res.status === 40202) { // 리프레시 토큰이 유효하지 않을 경우
+            store.dispatch("logout"); // 로그아웃
+            return Promise.reject(error.response.data);
+          }
+  
+          const newAuthorizationHeader = res.headers["authorization"];
+          const newAccessToken = newAuthorizationHeader ? newAuthorizationHeader.replace("Bearer ", "") : null;
+  
+          if (newAccessToken) {
+            localStorage.setItem("accessToken", newAccessToken);
+            instance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+  
+            return instance(originalRequest);
+          }
+        } catch (refreshError) {
+          store.dispatch("logout");
+          return Promise.reject(refreshError);
         }
-
-        const newAuthorizationHeader = res.headers["authorization"];
-        const newAccessToken = newAuthorizationHeader ? newAuthorizationHeader.replace("Bearer ", "") : null;
-
-        if (newAccessToken) {
-          localStorage.setItem("accessToken", newAccessToken);
-          instance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-          return instance(originalRequest);
-        }
-      } catch (refreshError) {
-        store.dispatch("logout");
-        return Promise.reject(refreshError);
       }
     }
 
