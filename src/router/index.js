@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
-import SentenceDetailPage from "@/views/SentenceDetailPage.vue";
-import SentenceSetPage from "@/views/SentenceSetPage.vue";
+import SentenceDetailPage from "@/views/sentences/SentenceDetailPage.vue";
+import SentenceSetPage from "@/views/sentences/SentenceSetPage.vue";
 import SignComponent from "@/views/auth/SignComponent.vue";
-import AddSentence from "@/components/pages/sentences/AddSentence.vue";
 import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
+import UserSentenceSetPage from "@/views/my/UserSentenceSetPage.vue";
 
 const routes = [
   {
@@ -23,14 +23,14 @@ const routes = [
     component: PublicSentenceSetPage
   },
   {
+    path: "/my/sentence-set/list",
+    name: "UserSentenceSetPage",
+    component: UserSentenceSetPage
+  },
+  {
     path: "/sentences",
     name: "SentenceSetPage",
     component: SentenceSetPage,
-  },
-  {
-    path: "/new-sentence",
-    name: "AddSentence",
-    component: AddSentence,
   },
   {
     path: "/sign",

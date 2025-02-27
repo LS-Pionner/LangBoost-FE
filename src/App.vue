@@ -1,4 +1,3 @@
-<!-- App.vue -->
 <template>
   <div id="app">
     <NavbarComponent />
@@ -16,5 +15,10 @@ import FooterComponent from "@/components/layout/FooterComponent.vue";
 </script>
 
 <style>
-/* 여기에 앱 전체에 대한 스타일을 추가할 수 있습니다. */
+/* 전체 레이아웃 스타일 */
+#app {
+  min-height: 100vh; /* 화면 최소 높이를 100vh로 설정 */
+  display: flex;
+  flex-direction: column;
+}
 </style>
