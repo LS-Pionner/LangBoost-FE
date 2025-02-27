@@ -1,162 +1,135 @@
 <template>
-  <div class="footer">
-    <div class="content">
-      <div class="logo">
-        <CompanyLogo class="company-logo" />
-      </div>
+  <div id="wrapper">
+    <main class="content" @scroll="handleScroll">
+      <!-- 페이지 콘텐츠 -->
+    </main>
 
-      <div class="navbar">
-        <!-- <div class="text-wrapper">About Us</div>
-        <div class="text-wrapper">Contact Us</div>
-        <div class="text-wrapper">Help Center</div>
-        <div class="text-wrapper">Blog Posts</div>
-        <div class="text-wrapper">Language Tips</div> -->
-      </div>
+    <footer :class="{ hidden: isAtTop }">
+      <div class="footer">
+        <div class="content">
+          <div class="logo">
+            <CompanyLogo class="company-logo" />
+          </div>
+        </div>
 
-      <div class="social-links"></div>
-    </div>
-
-    <div class="credits">
-      <div class="divider" />
-      <div class="div">
-        <p class="p">© 2025 LangBoost. All rights reserved.</p>
-        <div class="text-wrapper-2">Privacy Policy</div>
-        <div class="text-wrapper-2">Terms of Use</div>
-        <div class="text-wrapper-2">Cookie Settings</div>
+        <div class="credits">
+          <div class="divider" />
+          <div class="div">
+            <p class="p">© 2025 LangBoost. All rights reserved.</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
 <script setup>
 import CompanyLogo from "@/components/UI/CompanyLogo.vue";
+import { ref } from "vue";
+
+const isAtTop = ref(false);
+
+// 페이지 스크롤이 맨 위일 때 푸터를 숨기는 함수
+const handleScroll = (event) => {
+  const scrollTop = event.target.scrollTop;
+  isAtTop.value = scrollTop === 0; // 페이지 스크롤이 맨 위일 때
+};
 </script>
 
-<style>
-.footer {
-  align-items: center;
+<style scoped>
+/* 전체 레이아웃을 flex로 설정하여 푸터를 하단에 위치시킴 */
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 전체 화면의 높이를 차지하게 설정 */
+}
+
+main.content {
+  flex-grow: 1; /* 콘텐츠 영역이 남는 공간을 차지하게 하고, 푸터를 아래로 밀어냄 */
+  overflow-y: auto; /* main 영역에서 스크롤 가능하게 설정 */
+  padding-bottom: 80px; /* 푸터 공간을 고려한 여백 추가 */
+}
+
+/* 푸터 스타일 설정 */
+footer {
   background-color: var(--semantic-background-color-primary);
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  padding: 80px 64px;
-  position: relative;
-  width: 1440px;
-}
-
-.footer .content {
-  align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 32px;
-  position: relative;
+  padding: 40px 64px;
   width: 100%;
+  margin-top: auto; /* 푸터가 화면 하단으로 밀리도록 설정 */
+  position: relative; /* 푸터가 페이지 하단에 고정되도록 설정 */
 }
 
-.footer .logo {
-  align-items: flex-start;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 24px;
-  position: relative;
+/* 푸터 숨기기 스타일 */
+footer.hidden {
+  display: none;
 }
 
-.footer .company-logo {
-  height: 36px !important;
-  position: relative !important;
-  width: 84px !important;
+/* PC에서 푸터 스타일 */
+@media (min-width: 769px) {
+  footer {
+    padding: 20px 32px;
+  }
+
+  .footer .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer .credits {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .footer .divider {
+    width: 100%;
+    height: 1px;
+    background-color: var(--semantic-border-primary);
+  }
+
+  .footer .div {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer .p {
+    color: var(--semantic-text-primary);
+    font-size: 14px;
+  }
+
+  .footer .text-wrapper-2 {
+    color: var(--semantic-link-primary);
+    text-decoration: underline;
+    font-size: 14px;
+  }
+
+  .footer .navbar,
+  .footer .social-links {
+    display: none; /* PC에서 navbar와 social-links를 숨김 */
+  }
 }
 
-.footer .navbar {
-  align-items: flex-start;
-  display: inline-flex;
-  flex: 0 0 auto;
-  gap: 32px;
-  position: relative;
-}
+/* 모바일 화면에서만 푸터를 간소화하여 보이게 설정 */
+@media (max-width: 768px) {
+  footer {
+    padding: 20px 16px;
+  }
 
-.footer .text-wrapper {
-  color: var(--semantic-link-primary);
-  font-family: var(--text-small-semi-bold-font-family);
-  font-size: var(--text-small-semi-bold-font-size);
-  font-style: var(--text-small-semi-bold-font-style);
-  font-weight: var(--text-small-semi-bold-font-weight);
-  letter-spacing: var(--text-small-semi-bold-letter-spacing);
-  line-height: var(--text-small-semi-bold-line-height);
-  margin-top: -1px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
+  .footer .credits {
+    gap: 8px;
+  }
 
-.footer .social-links {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
-  gap: 12px;
-  justify-content: flex-end;
-  position: relative;
-}
+  .footer .p {
+    font-size: 12px;
+  }
 
-.footer .credits {
-  align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 32px;
-  position: relative;
-  width: 100%;
-}
-
-.footer .divider {
-  align-self: stretch;
-  background-color: var(--semantic-border-primary);
-  border: 1px solid;
-  border-color: var(--semantic-border-primary);
-  height: 1px;
-  position: relative;
-  width: 100%;
-}
-
-.footer .div {
-  align-items: flex-start;
-  display: inline-flex;
-  flex: 0 0 auto;
-  gap: 24px;
-  position: relative;
-}
-
-.footer .p {
-  color: var(--semantic-text-primary);
-  font-family: var(--text-small-normal-font-family);
-  font-size: var(--text-small-normal-font-size);
-  font-style: var(--text-small-normal-font-style);
-  font-weight: var(--text-small-normal-font-weight);
-  letter-spacing: var(--text-small-normal-letter-spacing);
-  line-height: var(--text-small-normal-line-height);
-  margin-top: -1px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.footer .text-wrapper-2 {
-  color: var(--semantic-link-primary);
-  font-family: var(--text-small-link-font-family);
-  font-size: var(--text-small-link-font-size);
-  font-style: var(--text-small-link-font-style);
-  font-weight: var(--text-small-link-font-weight);
-  letter-spacing: var(--text-small-link-letter-spacing);
-  line-height: var(--text-small-link-line-height);
-  margin-top: -1px;
-  position: relative;
-  text-decoration: underline;
-  white-space: nowrap;
-  width: fit-content;
+  .footer .divider {
+    margin-top: 20px;
+  }
 }
 </style>

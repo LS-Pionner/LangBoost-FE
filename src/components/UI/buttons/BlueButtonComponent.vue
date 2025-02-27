@@ -13,7 +13,7 @@
 .blue-btn {
   background-color: #35abff; /* 내부 배경색 */
   color: white; /* 글씨 색깔 */
-  border: 2px solid black; /* 검은색 테두리 */
+  border: 2px solid #555555; /* 검은색 테두리 */
   padding: 10px 20px;
   font-size: 16px;
   text-align: center;
