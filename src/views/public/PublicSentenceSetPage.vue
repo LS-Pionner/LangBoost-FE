@@ -12,7 +12,7 @@
 </template>
   
 <script setup>
-import PublicSentenceSetListComponent from '../../components/pages/sentenceset/PublicSentenceSetListComponent.vue';
+import PublicSentenceSetListComponent from '../../components/features/public/PublicSentenceSetListComponent.vue';
   
 </script>
   
