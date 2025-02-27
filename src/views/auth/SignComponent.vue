@@ -45,148 +45,131 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import router from '@/router';
 import store from '@/store';
 import axios from '@/axios';
 import { computed, reactive, ref, watchEffect } from 'vue';
 
-export default {
-  name: "SignComponent",
-  setup() {
-    const isAuthenticated = computed(() => store.state.isAuthenticated);  // 인증 상태
-    const isActive = ref(false);  // 패널 상태
-    const isCorrect = ref(true);  // 비밀번호 일치 여부 상태
+const isAuthenticated = computed(() => store.state.isAuthenticated);  // 인증 상태
+const isActive = ref(false);  // 패널 상태
+const isCorrect = ref(true);  // 비밀번호 일치 여부 상태
 
-      // 패널 상태 변경 함수
-    const activePanel = (status) => {
-      isActive.value = status;
-    }
-    
-    // 비밀번호 일치 여부 확인
-    const correctPassword = (status) => {
-      isCorrect.value = status;
-    }
-
-    const loginForm = reactive({
-      form: {
-        username: "",
-        password: ""
-      }
-    });
-
-    const registerForm = reactive({
-      form: {
-        email: "",
-        password: "",
-        passwordConfirm: "",
-      },
-      message: "",
-      messageType: "",
-    });
-
-    // 로그인 한 사용자가 다시 로그인 할 수 없도록 라우팅
-    watchEffect(() => {
-      if (isAuthenticated.value) {  // 이미 인증된 사용자는 홈으로 라우팅
-        router.push({ path: "/" });
-      }
-    });
-
-    // 이메일 중복 확인 API 호출
-    const emailCheck = () => {
-      axios.get(`/api/v1/auth/email-check?email=${registerForm.form.email}`).then((res) => {
-        registerForm.message = res.data.payload;
-        registerForm.messageType = "available";
-      }).catch((error) => {
-        if (error.response && error.response.data) {
-          registerForm.message = error.response.data.error.message;
-          registerForm.messageType = "unusable";
-        } else {
-          registerForm.message = "사용할 수 없는 이메일입니다.";
-          registerForm.messageType = "unusable";
-        }
-      });
-    };
-
-    // 로그인 API 호출
-    const login = () => {
-      const isFormFilled = loginForm.form.username && loginForm.form.password;
-
-      if (!isFormFilled) {
-        window.alert("모든 필드를 채워주세요.");
-        return;
-      }
-
-      axios.post("/api/v1/auth/login", loginForm.form).then((res) => {
-        const authorizationHeader = res.headers['authorization'];
-        const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
-
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-          store.dispatch("initAuthentication");
-          router.push({ path: "/" }); // 메인 페이지로 이동
-        } else {
-          window.alert("유효하지 않은 토큰입니다.");
-        }
-
-      }).catch((error) => {
-        if (error.response && error.response.data) {
-          window.alert(error.response.data.error.message);
-        } else {
-          window.alert("로그인에 실패했습니다.");
-        }
-      });
-    };
-
-    // 회원가입 API 호출
-    const register = () => {
-      correctPassword(true);
-      const isFormFilled = registerForm.form.email && registerForm.form.password &&
-          registerForm.form.passwordConfirm;
-
-      if (!isFormFilled) {
-        window.alert("모든 필드를 채워주세요.");
-        return;
-      }
-
-      // 비밀번호 일치 여부 확인
-      if (registerForm.form.password !== registerForm.form.passwordConfirm) {
-        correctPassword(false);
-        return;
-      }
-
-      axios.post("/api/v1/auth/register", registerForm.form).then((res) => {
-        correctPassword(true);
-        window.alert(res.data.payload);
-        registerForm.message = "";
-        registerForm.messageType = "";
-        // 로그인 탭으로 변경
-        activePanel(false);
-      }).catch((error) => {
-        if (error.response && error.response.data) {
-          window.alert(error.response.data.error.message);
-          registerForm.messageType = "unusable";
-        } else {
-          window.alert("사용할 수 없는 이메일입니다.");
-          registerForm.messageType = "unusable";
-        }
-      });
-    };
-
-    return {
-      isAuthenticated,
-      isActive,
-      isCorrect,
-      activePanel,
-      correctPassword,
-      loginForm,
-      registerForm,
-      emailCheck,
-      login,
-      register,
-    };
-  },
+  // 패널 상태 변경 함수
+const activePanel = (status) => {
+  isActive.value = status;
 }
+
+// 비밀번호 일치 여부 확인
+const correctPassword = (status) => {
+  isCorrect.value = status;
+}
+
+const loginForm = reactive({
+  form: {
+    username: "",
+    password: ""
+  }
+});
+
+const registerForm = reactive({
+  form: {
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  },
+  message: "",
+  messageType: "",
+});
+
+// 로그인 한 사용자가 다시 로그인 할 수 없도록 라우팅
+watchEffect(() => {
+  if (isAuthenticated.value) {  // 이미 인증된 사용자는 홈으로 라우팅
+    router.push({ path: "/" });
+  }
+});
+
+// 이메일 중복 확인 API 호출
+const emailCheck = async () => {
+  try {
+    const res = await axios.get(`/api/v1/auth/email-check?email=${registerForm.form.email}`);
+    registerForm.message = res.data.payload;
+    registerForm.messageType = "available";
+  } catch (error) {
+    if (error) {
+      registerForm.message = error.error.message;
+    } else {
+      registerForm.message = "사용할 수 없는 이메일입니다.";
+    }
+    registerForm.messageType = "unusable"
+  }
+};
+
+// 로그인 API 호출
+const login = async () => {
+  const isFormFilled = loginForm.form.username && loginForm.form.password;
+
+  if (!isFormFilled) {
+    window.alert("모든 필드를 채워주세요.");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/api/v1/auth/login", loginForm.form);
+    const authorizationHeader = res.headers['authorization'];
+    const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
+
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+      store.dispatch("initAuthentication");
+      router.push({ path: "/" }); // 메인 페이지로 이동
+    } else {
+      window.alert("유효하지 않은 토큰입니다.");
+    }
+  } catch (error) {
+    if (error) {
+      window.alert(error.error.message);
+    } else {
+      window.alert("로그인에 실패했습니다.");
+    }
+  }
+};
+
+// 회원가입 API 호출
+const register = async () => {
+  correctPassword(true);
+  const isFormFilled = registerForm.form.email && registerForm.form.password &&
+      registerForm.form.passwordConfirm;
+
+  if (!isFormFilled) {
+    window.alert("모든 필드를 채워주세요.");
+    return;
+  }
+
+  // 비밀번호 일치 여부 확인
+  if (registerForm.form.password !== registerForm.form.passwordConfirm) {
+    correctPassword(false);
+    return;
+  }
+
+  try {
+    const res = await axios.post("/api/v1/auth/register", registerForm.form);
+    correctPassword(true);
+    window.alert(res.data.payload);
+    registerForm.message = "";
+    registerForm.messageType = "";
+    // 로그인 탭으로 변경
+    activePanel(false);
+  } catch (error) {
+    if (error) {
+      window.alert(error.error.message);
+      registerForm.messageType = "unusable";
+    } else {
+      window.alert("사용할 수 없는 이메일입니다.");
+      registerForm.messageType = "unusable";
+    }
+  }
+};
 </script>
 
 <style scoped>
