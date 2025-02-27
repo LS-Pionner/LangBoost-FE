@@ -19,16 +19,14 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: "FooterComponent",
-};
+<script setup>
+
 </script>
 
 <style scoped>
 /* 푸터 스타일 */
 .footer {
-  background-color: #1e90ff;
+  background-color: #fafafa;
   padding: 15px 0;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -50,7 +48,7 @@ export default {
 }
 
 .footer-link {
-  color: white;
+  color: rgb(0, 0, 0);
   text-decoration: none;
   font-size: 18px;
   font-weight: bold;

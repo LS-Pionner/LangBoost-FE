@@ -6,15 +6,21 @@
         <!-- 'Home' 버튼을 클릭하면 '/'로 이동 -->
         <router-link to="/" class="item-link">Home</router-link>
       </div>
+    </div>
+
+    <div class="middle-container">
       <!-- 'Sentences' 버튼 -->
       <div class="item">
         <!-- 'Sentences' 버튼을 클릭하면 '/sentences'로 이동 -->
-        <router-link to="/sentences" class="item-link">문장 세트</router-link>
+        <router-link to="/public/sentence-set/list" class="item-link">공용 문장 세트</router-link>
+      </div>
+      <div class="item">
+        <router-link to="/my/sentence-set/list" class="item-link">개인 문장 세트</router-link>
       </div>
     </div>
 
     <!-- 검색바 추가 -->
-    <div class="middle-container">
+    <!-- <div class="middle-container">
       <div class="search-box">
         <form @submit.prevent="searchSentenceSet">
           <input class="search-txt" type="text" placeholder="검색어를 입력해 주세요">
@@ -23,7 +29,7 @@
           </button>
         </form>
       </div>
-    </div>
+    </div> -->
 
     <div class="right-container">
       <!-- '로그인, 회원가입' 버튼 -->
@@ -94,7 +100,7 @@ const logout = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 25%;
+  display: flex;
 }
 
 .right-container {
