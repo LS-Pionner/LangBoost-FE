@@ -4,22 +4,42 @@
             <div class="content-header">
                 <h2>개인 문장 세트</h2>
                 <span class="content-count">총 문장 개수: {{ sentenceSetCount }}</span>
-                <i class="fa-regular fa-square-plus content-add-button"></i>
+                <i class="fa-regular fa-square-plus content-add-button" @click="openModal"></i>
             </div>
             <UserSentenceSetListComponent @sentenceSetCountReceived="handleSentenceSetCount" />
+            <AddModalComponent 
+                :isVisible="isVisible"
+                @close="closeModal"
+                @add="addSentenceSet"
+            />
         </div>
     </div>
 </template>
   
 <script setup>
 import UserSentenceSetListComponent from '@/components/features/my/UserSentenceSetListComponent.vue';
+import AddModalComponent from '@/components/UI/modals/AddModalComponent.vue';
 import { ref } from 'vue';
 
-const sentenceSetCount = ref(0);
+const sentenceSetCount = ref(0);    // 문장 세트 개수
+const isVisible = ref(false);  // 모달 오픈 여부
 
 // 하위 컴포넌트에서 받아온 문장 세트 개수
 const handleSentenceSetCount = (count) => {
     sentenceSetCount.value = count;
+}
+
+const openModal = () => {
+    isVisible.value = true;
+}
+
+const closeModal = () => {
+    isVisible.value = false;
+}
+
+const addSentenceSet = (name) => {
+    console.log('새로운 문장 세트 이름: ', name);
+    closeModal();
 }
 </script>
   
