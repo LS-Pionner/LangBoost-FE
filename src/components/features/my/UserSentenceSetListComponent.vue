@@ -13,15 +13,18 @@
     
   <script setup>
   import axios from '@/axios';
-  import { ref, onMounted } from 'vue';
-import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
+  import { ref, onMounted, defineEmits } from 'vue';
+  import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
+
+  const emit = defineEmits(['sentenceSetCountReceived']);
   
   const sentenceSetList = ref([]);  // API에서 가져온 문장 목록
   const offset = ref(0);  // param으로 전달할 offset (데이터를 가져올 시작 위치)
   const limit = 10; // param으로 전달할 limit (한 번에 가져올 데이터 수)
   const loading = ref(false); // 데이터 로딩 상태
   const isLastPage = ref(false);  // 마지막 페이지 여부
-  
+  let sentenceSetCount = null;  // 상위 컴포넌트에 전달할 문장 세트 개수
+
   onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchsentenceSetList();
@@ -40,6 +43,12 @@ import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
         
       if (res.data.success) {
         const data = res.data.payload;
+
+        // 문장 세트 개수가 변경될 경우에만 전달
+        if (sentenceSetCount !== data.sentenceSetCount) {
+          emit('sentenceSetCountReceived', data.sentenceSetCount);
+          sentenceSetCount = data.sentenceSetCount;
+        }
   
         // 불러온 데이터가 limit 미만일 때
         if (data.sentenceSetList.length < limit) {
