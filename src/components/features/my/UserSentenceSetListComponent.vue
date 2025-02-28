@@ -13,7 +13,7 @@
     
   <script setup>
   import axios from '@/axios';
-  import { ref, onMounted, defineEmits } from 'vue';
+  import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
   import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
 
   const emit = defineEmits(['sentenceSetCountReceived']);
@@ -25,6 +25,21 @@
   const isLastPage = ref(false);  // 마지막 페이지 여부
   let sentenceSetCount = null;  // 상위 컴포넌트에 전달할 문장 세트 개수
 
+  const props = defineProps({
+    newSentenceSet: {
+      type: Object,
+      required: false
+    }
+  });
+
+  // 새로 추가된 문장 세트를 기존 문장 세트 목록에 포함
+  watch(() => props.newSentenceSet, (newSet) => {
+    if (newSet) {
+        sentenceSetList.value.unshift(newSet);
+    }
+});
+
+  
   onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchsentenceSetList();
