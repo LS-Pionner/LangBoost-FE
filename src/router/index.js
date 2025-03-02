@@ -6,6 +6,7 @@ import HomeView from "@/views/HomeView.vue";
 import SignComponent from "@/views/auth/SignComponent.vue";
 import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
 import UserSentenceSetPage from "@/views/my/UserSentenceSetPage.vue";
+import MyPage from "@/views/my/MyPage.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/sign",
     name: "SignComponent",
     component: SignComponent,
+  },
+  {
+    path: "/mypage",
+    name: "MyPage", // Fix the name here, remove quotes
+    component: MyPage, // Use the imported component
   },
 ];
 
