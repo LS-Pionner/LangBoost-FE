@@ -7,7 +7,7 @@
             </div>
             <EditModalComponent 
                 v-if="activeModalId === sentenceSet.id"
-                :activeModalId="activeModalId"
+                :sentenceSet="sentenceSet"
                 @close="closeModal"
             />
         </div>
@@ -26,6 +26,7 @@
 <script setup>
 import { defineProps, computed, ref } from 'vue';
 import EditModalComponent from '@/components/UI/modals/EditModalComponent.vue';
+import { truncateString } from '@/utils/truncate';
 
 const props = defineProps({
     sentenceSet: {
@@ -52,8 +53,7 @@ const closeModal = () => {
 }
 
 const truncatedTitle = computed(() => {
-    const title = props.sentenceSet.title;
-    return title.length > 15 ? title.substring(0, 15) + '...' : title;
+    return truncateString(props.sentenceSet.title, 15);
 });
 
 </script>
