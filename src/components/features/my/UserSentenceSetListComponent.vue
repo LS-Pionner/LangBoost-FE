@@ -5,6 +5,7 @@
           v-for="sentenceSet in sentenceSetList"
           :key="sentenceSet.id"
           :sentenceSet="sentenceSet"
+          @delete="handleDelete"
         />
         <div v-if="loading" class="loading">Loading...</div>
       </div>
@@ -37,9 +38,13 @@
     if (newSet) {
         sentenceSetList.value.unshift(newSet);
     }
-});
+  });
 
-  
+  // 문장 세트 삭제 이벤트 수신
+  const handleDelete = (id) => {
+    sentenceSetList.value = sentenceSetList.value.filter(set => set.id !== id);
+  }
+
   onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchsentenceSetList();

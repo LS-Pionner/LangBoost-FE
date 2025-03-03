@@ -9,6 +9,7 @@
                 v-if="activeModalId === sentenceSet.id"
                 :sentenceSet="sentenceSet"
                 @close="closeModal"
+                @deleted="handleDelete"
             />
         </div>
         <div class="sentence-set-info">
@@ -24,7 +25,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
 import EditModalComponent from '@/components/UI/modals/EditModalComponent.vue';
 import { truncateString } from '@/utils/truncate';
 
@@ -34,6 +35,8 @@ const props = defineProps({
         required: true
     },
 });
+
+const emit = defineEmits(['delete']);
 
 const activeModalId = ref(null);
 
@@ -48,13 +51,20 @@ const openModal = () => {
     activeModalId.value = props.sentenceSet.id;
 }
 
+// 편집 모달창 닫기
 const closeModal = () => {
     activeModalId.value = null;
 }
 
+// title 길이 제한
 const truncatedTitle = computed(() => {
     return truncateString(props.sentenceSet.title, 15);
 });
+
+// UserSentenceSetListComponent에 삭제된 문장 세트 id 전달달
+const handleDelete = (id) => {
+    emit('delete', id);
+}
 
 </script>
 
