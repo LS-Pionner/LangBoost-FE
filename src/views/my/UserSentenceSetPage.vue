@@ -3,7 +3,7 @@
         <div class="contents">
             <div class="content-header">
                 <h2>개인 문장 세트</h2>
-                <span class="content-count">총 문장 개수: {{ sentenceSetCount }}</span>
+                <span class="content-count">총 문장 세트 개수: {{ sentenceSetCount }}</span>
                 <i class="fa-regular fa-square-plus content-add-button" @click="openModal"></i>
             </div>
             <UserSentenceSetListComponent 
@@ -77,7 +77,7 @@ align-items: center;
 
 .contents {
 width: 100%;
-max-width: 50%;
+max-width: 70%;
 padding: 20px;
 box-sizing: border-box;
 margin-top: 50px;

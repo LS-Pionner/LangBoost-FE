@@ -113,8 +113,7 @@
   }
   
   .sentenceset-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 85%;
   }
   
   .loading {

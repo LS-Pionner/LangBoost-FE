@@ -3,8 +3,13 @@
         <div class="sentenceset-header">
             <h3>{{ truncatedTitle }}</h3>
             <div class="sentence-set-button">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <i class="fa-solid fa-ellipsis-vertical more-button" @click="openModal"></i>
             </div>
+            <EditModalComponent 
+                v-if="activeModalId === sentenceSet.id"
+                :activeModalId="activeModalId"
+                @close="closeModal"
+            />
         </div>
         <div class="sentence-set-info">
             <div>총 개수: {{ sentenceSet.sentenceCount }}</div>
@@ -19,7 +24,8 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { defineProps, computed, ref } from 'vue';
+import EditModalComponent from '@/components/UI/modals/EditModalComponent.vue';
 
 const props = defineProps({
     sentenceSet: {
@@ -27,6 +33,23 @@ const props = defineProps({
         required: true
     },
 });
+
+const activeModalId = ref(null);
+
+const openModal = () => {
+    // 현재 열려 있는 모달창이 있으면 닫기
+    console.log('>>', activeModalId);
+    
+    if (activeModalId.value !== null) {
+        closeModal();
+    }
+
+    activeModalId.value = props.sentenceSet.id;
+}
+
+const closeModal = () => {
+    activeModalId.value = null;
+}
 
 const truncatedTitle = computed(() => {
     const title = props.sentenceSet.title;
@@ -44,7 +67,7 @@ const truncatedTitle = computed(() => {
     border-radius: 5px;
     background-color: #f9f9f9;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .sentenceset-item:hover {
@@ -70,16 +93,15 @@ const truncatedTitle = computed(() => {
     font-size: 24px;
 }
 
-.sentence-set-button button {
-    background-color: #007bff;
-    color: white;
+.more-button {
     border: none;
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
 }
 
-.sentence-set-button button:hover {
+.more-button:hover {
+    color: white;
     background-color: #0056b3;
 }
 
