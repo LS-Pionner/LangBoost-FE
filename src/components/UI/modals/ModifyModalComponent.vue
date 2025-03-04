@@ -1,14 +1,14 @@
 <template>
-    <div class="modal-overlay">
-        <div class="modal-content">
-            <i class="fa-regular fa-circle-xmark close-modal" @click="closeModifyModal"></i>
+    <div class="modify-modal-overlay">
+        <div class="modify-modal-content">
+            <i class="fa-regular fa-circle-xmark close-modify-modal" @click="closeModifyModal"></i>
             <h3>세트 이름 변경</h3>
             <input 
                 type="text"
                 v-model="sentenceSetName"
                 placeholder="문장 세트 이름"
             />
-            <div class="modal-buttons">
+            <div class="modify-modal-buttons">
                 <BlueButtonComponent @click="modifySentenceSet">변경</BlueButtonComponent>
                 <WhiteButtonComponent @click="closeModifyModal">취소</WhiteButtonComponent>
             </div>
@@ -70,7 +70,7 @@ const modifySentenceSet = async () => {
 </script>
 
 <style scoped>
-.modal-overlay {
+.modify-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -80,9 +80,10 @@ const modifySentenceSet = async () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 9999; /* ModifyModalComponent를 최상위에 표시하기 위함 */
 }
 
-.close-modal {
+.close-modify-modal {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -92,26 +93,27 @@ const modifySentenceSet = async () => {
     transition: color 0.3s;
 }
 
-.close-modal:hover {
+.close-modify-modal:hover {
     color: black;
 }
 
-.modal-content {
+.modify-modal-content {
     background: white;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     width: 600px;
     position: relative;
+    z-index: 10000;
 }
 
-.modal-content h3 {
+.modify-modal-content h3 {
     margin-top: 0;
     color: #333;
     font-size: 20px;
 }
 
-.modal-content input {
+.modify-modal-content input {
     width: 95%;
     padding: 12px;
     margin-bottom: 20px;
@@ -120,12 +122,12 @@ const modifySentenceSet = async () => {
     font-size: 16px;
 }
 
-.modal-buttons {
+.modify-modal-buttons {
     display: flex;
     justify-content: flex-end;
 }
 
-.modal-content button {
+.modify-modal-content button {
     margin-left: 10px;
     padding: 10px 20px;
     font-size: 16px;

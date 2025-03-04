@@ -86,6 +86,7 @@ const modifyHandle = (modifiedSentenceSet) => {
     left: 100%;
     margin-left: 10px;
     position: absolute;
+    z-index: 999; /* ModifyModalComponent를 최상위에 표시하기 위함 */
 }
 
 .close-modal {
@@ -107,6 +108,7 @@ const modifyHandle = (modifiedSentenceSet) => {
     padding: 30px;
     position: relative;
     width: 10px;
+    z-index: 1000;
 }
 
 .modal-button {

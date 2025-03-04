@@ -20,5 +20,6 @@ import FooterComponent from "@/components/layout/FooterComponent.vue";
   min-height: 100vh; /* 화면 최소 높이를 100vh로 설정 */
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 </style>
