@@ -1,17 +1,24 @@
 <template>
     <div class="modal-overlay">
         <div class="modal-content">
-            <i class="fa-regular fa-circle-xmark close-modal" @click="closeModal"></i>
-            <i class="fa-regular fa-pen-to-square modal-button"></i>
+            <i class="fa-regular fa-circle-xmark close-modal" @click="closeEditModal"></i>
+            <i class="fa-regular fa-pen-to-square modal-button" @click="openModifyModal"></i>
             <i class="fa-regular fa-trash-can modal-button modal-discard" @click="deleteSentenceSet"></i>
         </div>
     </div>
+    <ModifyModalComponent 
+        v-if="activeModalId === sentenceSet.id"
+        :sentenceSet="sentenceSet"
+        @closeModify="closeModifyModal"
+        @modifySentenceSet="modifyHandle"
+    />
 </template>
 
 <script setup>
 import instance from '@/axios';
-import { defineEmits, defineProps } from 'vue';
+import { defineEmits, defineProps, ref } from 'vue';
 import { truncateString } from '@/utils/truncate';
+import ModifyModalComponent from './ModifyModalComponent.vue';
 
 const props = defineProps({
     sentenceSet: {
@@ -20,13 +27,17 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['close', 'deleted']);
+const emit = defineEmits(['closeEdit', 'deleteSentenceSet', 'modifySentenceSet']);
 
-// 모달창 닫기
-const closeModal = () => {
-    emit('close');
+// 문장 세트 수정 모달창 id
+const activeModalId = ref(null);
+
+// 편집 모달창 닫기
+const closeEditModal = () => {
+    emit('closeEdit');
 }
 
+// 문장 세트 삭제 함수
 const deleteSentenceSet = async () => {
     const title = truncateString(props.sentenceSet.title, 15);
     const isDelete = window.confirm(title + "을/를 삭제하시겠습니까?");
@@ -37,18 +48,35 @@ const deleteSentenceSet = async () => {
 
             if (res.data.success) {
                 // UserSentenceSetComponent에 삭제된 문장 세트 id 전달
-                emit('deleted', props.sentenceSet.id);
+                emit('deleteSentenceSet', props.sentenceSet.id);
 
                 console.log(res.data.payload);
                 window.alert('문장 세트가 삭제되었습니다.');
 
-                closeModal();
+                closeEditModal();
             }
         } catch (error) {
             console.log(error);
             window.alert('문장 세트 삭제 중 에러가 발생했습니다.');
         }
     }
+}
+
+// 문장 세트 수정 모달창 열기
+const openModifyModal = () => {
+    activeModalId.value = props.sentenceSet.id;
+}
+
+// 문장 세트 수정 모달창 닫기
+const closeModifyModal = () => {
+    activeModalId.value = null;
+    // 편집 모달창도 닫기
+    closeEditModal();
+}
+
+// 문장 세트 수정 handle 함수
+const modifyHandle = (modifiedSentenceSet) => {
+    emit('modifySentenceSet', modifiedSentenceSet);
 }
 
 </script>

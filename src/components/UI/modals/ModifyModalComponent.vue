@@ -1,16 +1,16 @@
 <template>
-    <div v-if="isVisible" class="modal-overlay">
+    <div class="modal-overlay">
         <div class="modal-content">
-            <i class="fa-regular fa-circle-xmark close-modal" @click="closeAddModal"></i>
-            <h3>새로운 세트 추가</h3>
+            <i class="fa-regular fa-circle-xmark close-modal" @click="closeModifyModal"></i>
+            <h3>세트 이름 변경</h3>
             <input 
                 type="text"
                 v-model="sentenceSetName"
                 placeholder="문장 세트 이름"
             />
             <div class="modal-buttons">
-                <BlueButtonComponent @click="addSentenceSet">추가</BlueButtonComponent>
-                <WhiteButtonComponent @click="closeAddModal">취소</WhiteButtonComponent>
+                <BlueButtonComponent @click="modifySentenceSet">변경</BlueButtonComponent>
+                <WhiteButtonComponent @click="closeModifyModal">취소</WhiteButtonComponent>
             </div>
         </div>
     </div>
@@ -18,35 +18,54 @@
 
 <script setup>
 import BlueButtonComponent from '../buttons/BlueButtonComponent.vue';
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, onMounted } from 'vue';
 import WhiteButtonComponent from '../buttons/WhiteButtonComponent.vue';
+import instance from '@/axios';
 
-defineProps({
-    isVisible: {
-        type: Boolean,
+const props = defineProps({
+    sentenceSet: {
+        type: Object,
         required: true
     },
 });
 
-const emit = defineEmits(['closeAdd', 'add']);
+const emit = defineEmits(['closeModify', 'modifySentenceSet']);
 
-const sentenceSetName = ref('');    // 추가할 문장 세트 이름
+const sentenceSetName = ref('');    // 변경할 문장 세트의 현재 이름
 
-// 모달창 닫기
-const closeAddModal = () => {
-    emit('closeAdd');
+// 컴포넌트가 마운트될 때 문장 세트의 현재 title을 세팅
+onMounted(() => {
+    sentenceSetName.value = props.sentenceSet.title;
+})
+
+// 문장 세트 수정 모달창 닫기
+const closeModifyModal = () => {
+    emit('closeModify');
 }
 
-// 새로운 문장 세트 추가
-const addSentenceSet = () => {
+// 문장 세트 수정
+const modifySentenceSet = async () => {
     if (sentenceSetName.value.trim() === '') {
-        alert('문장 세트 이름을 입력해주세요.');
+        alert('변경할 문장 세트 이름을 입력해주세요.');
         return;
     }
 
-    emit('add', sentenceSetName.value);
-    sentenceSetName.value = '';
-    closeAddModal();
+    try {
+        const res = await instance.put(`/api/v1/sentence-set/${props.sentenceSet.id}`, {
+            title: sentenceSetName.value
+        });
+
+        if (res.data.success) {
+            emit('modifySentenceSet', res.data.payload);
+            window.alert('문장 세트가 수정되었습니다.');
+            sentenceSetName.value = '';
+            closeModifyModal();
+        }
+        
+    } catch (error) {
+        console.error("수정 중 오류 발생: ", error);
+        window.alert('문장 세트 수정 중 오류가 발생했습니다.');
+    }
 }
 </script>
 

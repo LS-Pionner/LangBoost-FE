@@ -4,7 +4,7 @@
             <div class="content-header">
                 <h2>개인 문장 세트</h2>
                 <span class="content-count">총 문장 세트 개수: {{ sentenceSetCount }}</span>
-                <i class="fa-regular fa-square-plus content-add-button" @click="openModal"></i>
+                <i class="fa-regular fa-square-plus content-add-button" @click="openAddModal"></i>
             </div>
             <UserSentenceSetListComponent 
                 @sentenceSetCountReceived="handleSentenceSetCount" 
@@ -12,7 +12,7 @@
             />
             <AddModalComponent 
                 :isVisible="isVisible"
-                @close="closeModal"
+                @closeAdd="closeAddModal"
                 @add="addSentenceSet"
             />
         </div>
@@ -34,11 +34,11 @@ const handleSentenceSetCount = (count) => {
     sentenceSetCount.value = count;
 }
 
-const openModal = () => {
+const openAddModal = () => {
     isVisible.value = true;
 }
 
-const closeModal = () => {
+const closeAddModal = () => {
     isVisible.value = false;
 }
 
@@ -61,7 +61,7 @@ const addSentenceSet = async (name) => {
     }
 
 
-    closeModal();
+    closeAddModal();
 }
 </script>
   
@@ -77,7 +77,7 @@ align-items: center;
 
 .contents {
 width: 100%;
-max-width: 70%;
+max-width: 40%;
 padding: 20px;
 box-sizing: border-box;
 margin-top: 50px;

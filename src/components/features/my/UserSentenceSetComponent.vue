@@ -3,13 +3,14 @@
         <div class="sentenceset-header">
             <h3>{{ truncatedTitle }}</h3>
             <div class="sentence-set-button">
-                <i class="fa-solid fa-ellipsis-vertical more-button" @click="openModal"></i>
+                <i class="fa-solid fa-ellipsis-vertical more-button" @click="openEditModal"></i>
             </div>
             <EditModalComponent 
                 v-if="activeModalId === sentenceSet.id"
                 :sentenceSet="sentenceSet"
-                @close="closeModal"
-                @deleted="handleDelete"
+                @closeEdit="closeEditModal"
+                @deleteSentenceSet="handleDelete"
+                @modifySentenceSet="modifyHandle"
             />
         </div>
         <div class="sentence-set-info">
@@ -36,23 +37,18 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['deleteSentenceSet']);
 
+// 현재 활성화된 모달창 id
 const activeModalId = ref(null);
 
-const openModal = () => {
-    // 현재 열려 있는 모달창이 있으면 닫기
-    console.log('>>', activeModalId);
-    
-    if (activeModalId.value !== null) {
-        closeModal();
-    }
-
+// 편집 모달창 열기
+const openEditModal = () => {
     activeModalId.value = props.sentenceSet.id;
 }
 
 // 편집 모달창 닫기
-const closeModal = () => {
+const closeEditModal = () => {
     activeModalId.value = null;
 }
 
@@ -61,9 +57,14 @@ const truncatedTitle = computed(() => {
     return truncateString(props.sentenceSet.title, 15);
 });
 
-// UserSentenceSetListComponent에 삭제된 문장 세트 id 전달달
+// UserSentenceSetListComponent에 삭제된 문장 세트 id 전달
 const handleDelete = (id) => {
-    emit('delete', id);
+    emit('deleteSentenceSet', id);
+}
+
+// UserSentenceSetListComponent에 수정된 문장 세트 id와 title 전달
+const modifyHandle = (modifiedSentenceSet) => {
+    emit('modifySentenceSet', modifiedSentenceSet);
 }
 
 </script>
