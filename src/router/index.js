@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
-// import SentenceDetailPage from "@/views/sentences/SentenceDetailPage.vue";
-// import SentenceSetPage from "@/views/sentences/SentenceSetPage.vue";
 import SignComponent from "@/views/auth/SignComponent.vue";
 import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
 import UserSentenceSetPage from "@/views/my/UserSentenceSetPage.vue";
@@ -13,11 +11,6 @@ const routes = [
     name: "HomePage", // 라우트 이름 (선택 사항)
     component: HomePage, // 연결할 컴포넌트
   },
-  // {
-  //   path: "/public/sentence-set/:sentenceId",
-  //   name: "SentenceDetailPage",
-  //   component: SentenceDetailPage,
-  // },
   {
     path: "/public-sentences",
     name: "PublicSentenceSetPage",
@@ -28,11 +21,6 @@ const routes = [
     name: "UserSentenceSetPage",
     component: UserSentenceSetPage,
   },
-  // {
-  //   path: "/sentences",
-  //   name: "SentenceSetPage",
-  //   component: SentenceSetPage,
-  // },
   {
     path: "/sign",
     name: "SignComponent",
