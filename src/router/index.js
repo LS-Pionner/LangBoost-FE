@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
-import SentenceDetailPage from "@/views/sentences/SentenceDetailPage.vue";
-import SentenceSetPage from "@/views/sentences/SentenceSetPage.vue";
+import HomeView from "@/views/HomeView.vue";
+// import SentenceDetailPage from "@/views/sentences/SentenceDetailPage.vue";
+// import SentenceSetPage from "@/views/sentences/SentenceSetPage.vue";
 import SignComponent from "@/views/auth/SignComponent.vue";
 import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
 import UserSentenceSetPage from "@/views/my/UserSentenceSetPage.vue";
+import MyPage from "@/views/my/MyPage.vue";
 
 const routes = [
   {
@@ -13,29 +15,39 @@ const routes = [
     component: HomePage, // 연결할 컴포넌트
   },
   {
-    path: "/public/sentence-set/:sentenceId",
-    name: "SentenceDetailPage",
-    component: SentenceDetailPage,
+    path: "/test", // URL 경로
+    name: "HomeView", // 라우트 이름 (선택 사항)
+    component: HomeView, // 연결할 컴포넌트
   },
+  // {
+  //   path: "/public/sentence-set/:sentenceId",
+  //   name: "SentenceDetailPage",
+  //   component: SentenceDetailPage,
+  // },
   {
     path: "/public/sentence-set/list",
     name: "PublicSentenceSetPage",
-    component: PublicSentenceSetPage
+    component: PublicSentenceSetPage,
   },
   {
     path: "/my/sentence-set/list",
     name: "UserSentenceSetPage",
-    component: UserSentenceSetPage
+    component: UserSentenceSetPage,
   },
-  {
-    path: "/sentences",
-    name: "SentenceSetPage",
-    component: SentenceSetPage,
-  },
+  // {
+  //   path: "/sentences",
+  //   name: "SentenceSetPage",
+  //   component: SentenceSetPage,
+  // },
   {
     path: "/sign",
     name: "SignComponent",
-    component: SignComponent    
+    component: SignComponent,
+  },
+  {
+    path: "/mypage",
+    name: "MyPage", // Fix the name here, remove quotes
+    component: MyPage, // Use the imported component
   },
 ];
 
