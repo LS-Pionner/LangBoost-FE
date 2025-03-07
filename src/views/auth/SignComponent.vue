@@ -118,10 +118,11 @@ const login = async () => {
     const res = await axios.post("/api/v1/auth/login", loginForm.form);
     const authorizationHeader = res.headers['authorization'];
     const accessToken = authorizationHeader ? authorizationHeader.replace("Bearer ", "") : null;
-
+    
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
       store.dispatch("initAuthentication");
+      store.dispatch("initAdmin", res.data.payload.isAdmin);
       router.push({ path: "/" }); // 메인 페이지로 이동
     } else {
       window.alert("유효하지 않은 토큰입니다.");
