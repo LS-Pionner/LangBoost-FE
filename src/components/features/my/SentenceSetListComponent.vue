@@ -1,10 +1,12 @@
 <template>
     <div class="scrollable-container" @scroll="handleScroll">
-      <div class="sentenceset-container">
-        <UserSentenceSetComponent
+      <div :class="{'sentenceset-container' : isAdmin || !isReadOnly}">
+        <SentenceSetComponent
           v-for="sentenceSet in sentenceSetList"
           :key="sentenceSet.id"
           :sentenceSet="sentenceSet"
+          :isReadOnly="isReadOnly"
+          :isAdmin="isAdmin"
           @deleteSentenceSet="handleDelete"
           @modifySentenceSet="handleModify"
         />
@@ -14,9 +16,9 @@
   </template>
     
   <script setup>
-  import axios from '@/axios';
+  import instance from '@/axios';
   import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
-  import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
+  import SentenceSetComponent from './SentenceSetComponent.vue';
 
   const emit = defineEmits(['sentenceSetCountReceived']);
   
@@ -31,7 +33,15 @@
     newSentenceSet: {
       type: Object,
       required: false
-    }
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true
+    },
+    isReadOnly: {
+      type: Boolean,
+      required: true
+    },
   });
 
   // 새로 추가된 문장 세트를 기존 문장 세트 목록에 포함
@@ -48,8 +58,8 @@
 
   // 문장 세트 수정 이벤트 수신
   const handleModify = (modifiedSentenceSet) => {
-    const sentenceSet = sentenceSetList.value.filter(set => set.id === modifiedSentenceSet.id);
-
+    const sentenceSet = sentenceSetList.value.find(set => set.id === modifiedSentenceSet.id);
+    
     if (sentenceSet) {
       sentenceSet.title = modifiedSentenceSet.title;
     }
@@ -69,7 +79,12 @@
     loading.value = true;
   
     try {
-      const res = await axios.get(`api/v1/sentence-set?offset=${offset.value}`);
+      let res;
+      if (!props.isReadOnly) {
+        res = await instance.get(`api/v1/sentence-set?offset=${offset.value}`);
+      } else {
+        res = await instance.get(`api/v1/public/sentence-set?offset=${offset.value}`);
+      }
         
       if (res.data.success) {
         const data = res.data.payload;
@@ -107,12 +122,6 @@
       fetchsentenceSetList();
     }
   }
-  
-  // 문장 세트를 클릭하면 문장 세트 상세 보기로 이동하는 함수
-  // const navigateToSentenceSet = (id) => {
-  //   const frontendBaseURL = process.env.VUE_APP_FRONTEND_BASE_URL;
-  //   window.location.href = `${frontendBaseURL}/sentence-set/${id}`; // 문자열 보간법을 사용하여 URL 설정
-  // }
   
   </script>
   

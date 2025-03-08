@@ -3,11 +3,16 @@
         <div class="sentenceset-header">
             <h3>{{ truncatedTitle }}</h3>
             <div class="sentence-set-button">
-                <i class="fa-solid fa-ellipsis-vertical more-button" @click="openEditModal"></i>
+                <i v-if="isAdmin || !isReadOnly" 
+                    class="fa-solid fa-ellipsis-vertical more-button" 
+                    @click="openEditModal">
+                </i>
             </div>
             <EditModalComponent 
                 v-if="activeModalId === sentenceSet.id"
                 :sentenceSet="sentenceSet"
+                :isAdmin="isAdmin"
+                :isReadOnly="isReadOnly"
                 @closeEdit="closeEditModal"
                 @deleteSentenceSet="handleDelete"
                 @modifySentenceSet="modifyHandle"
@@ -15,12 +20,12 @@
         </div>
         <div class="sentence-set-info">
             <div>총 개수: {{ sentenceSet.sentenceCount }}</div>
-            <div>학습 중: {{ sentenceSet.inProgressSentenceCount }}</div>
-            <div>학습 완료: {{ sentenceSet.completedSentenceCount }}</div>
+            <div v-if="!isReadOnly">학습 중: {{ sentenceSet.inProgressSentenceCount }}</div>
+            <div v-if="!isReadOnly">학습 완료: {{ sentenceSet.completedSentenceCount }}</div>
         </div>
         <div class="date-info">
             <div class="date-info-item">생성일: {{ sentenceSet.lastViewedAt }}</div>
-            <div class="date-info-item">최근 학습일: {{ sentenceSet.lastViewedAt }}</div>
+            <div v-if="!isReadOnly" class="date-info-item">최근 학습일: {{ sentenceSet.lastViewedAt }}</div>
         </div>
     </div>
 </template>
@@ -35,9 +40,17 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    isAdmin: {
+      type: Boolean,
+      required: true
+    },
+    isReadOnly: {
+      type: Boolean,
+      required: true
+    },
 });
 
-const emit = defineEmits(['deleteSentenceSet']);
+const emit = defineEmits(['deleteSentenceSet', 'modifySentenceSet']);
 
 // 현재 활성화된 모달창 id
 const activeModalId = ref(null);

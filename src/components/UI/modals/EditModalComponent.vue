@@ -9,6 +9,8 @@
     <ModifyModalComponent 
         v-if="activeModalId === sentenceSet.id"
         :sentenceSet="sentenceSet"
+        :isAdmin="isAdmin"
+        :isReadOnly="isReadOnly"
         @closeModify="closeModifyModal"
         @modifySentenceSet="modifyHandle"
     />
@@ -24,6 +26,14 @@ const props = defineProps({
     sentenceSet: {
         type: Object,
         required: true,
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
+    },
+    isReadOnly: {
+        type: Boolean,
+        required: true
     },
 });
 
@@ -44,8 +54,13 @@ const deleteSentenceSet = async () => {
     
     if (isDelete) {
         try {
-            const res = await instance.delete(`api/v1/sentence-set/${props.sentenceSet.id}`);
-
+            let res;
+            if (!props.isReadOnly) {
+                res = await instance.delete(`api/v1/sentence-set/${props.sentenceSet.id}`);
+            } else if (props.isAdmin && props.isReadOnly) {
+                res = await instance.delete(`api/v1/admin/sentence-set/${props.sentenceSet.id}`);
+            }
+            
             if (res.data.success) {
                 // UserSentenceSetComponent에 삭제된 문장 세트 id 전달
                 emit('deleteSentenceSet', props.sentenceSet.id);

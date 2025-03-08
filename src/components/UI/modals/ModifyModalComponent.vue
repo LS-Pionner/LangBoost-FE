@@ -27,6 +27,14 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    isAdmin: {
+      type: Boolean,
+      required: true
+    },
+    isReadOnly: {
+      type: Boolean,
+      required: true
+    },
 });
 
 const emit = defineEmits(['closeModify', 'modifySentenceSet']);
@@ -51,9 +59,16 @@ const modifySentenceSet = async () => {
     }
 
     try {
-        const res = await instance.put(`/api/v1/sentence-set/${props.sentenceSet.id}`, {
+        let res;
+        if (!props.isReadOnly) {
+            res = await instance.put(`/api/v1/sentence-set/${props.sentenceSet.id}`, {
             title: sentenceSetName.value
         });
+        } else if (props.isAdmin && props.isReadOnly) {         
+            res = await instance.put(`/api/v1/admin/sentence-set/${props.sentenceSet.id}`, {
+            title: sentenceSetName.value
+        });
+        }
 
         if (res.data.success) {
             emit('modifySentenceSet', res.data.payload);
