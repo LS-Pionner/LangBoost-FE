@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     isAuthenticated: false,
-    isAdmin: false,
+    isAdmin: JSON.parse(localStorage.getItem('isAdmin')) || false,
   },
   mutations: {
     setAuthentication(state, status) {
@@ -11,6 +11,7 @@ export default createStore({
     },
     setAdmin(state, status) {
       state.isAdmin = status;
+      localStorage.setItem('isAdmin', JSON.stringify(status)); // 상태를 로컬 스토리지에 저장
     },
     logout(state) {
       state.isAuthenticated = false;
