@@ -1,7 +1,7 @@
 <template>
     <div class="modal-overlay">
         <div class="modal-content">
-            <i class="fa-regular fa-circle-xmark close-modal" @click="closeEditModal"></i>
+            <i class="fa-regular fa-circle-xmark close-modal" @click.stop="closeEditModal"></i>
             <i class="fa-regular fa-pen-to-square modal-button" @click="openModifyModal"></i>
             <i class="fa-regular fa-trash-can modal-button modal-discard" @click="deleteSentenceSet"></i>
         </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="scrollable-container" @scroll="handleScroll">
       <div :class="{'sentenceset-container' : isAdmin || !isReadOnly}">
-        <SentenceSetComponent
+        <SentenceSetComponent class="sentenceset-item"
           v-for="sentenceSet in sentenceSetList"
           :key="sentenceSet.id"
           :sentenceSet="sentenceSet"
@@ -9,6 +9,7 @@
           :isAdmin="isAdmin"
           @deleteSentenceSet="handleDelete"
           @modifySentenceSet="handleModify"
+          @click="(event) => navigateSentence(sentenceSet.id, event)"
         />
         <div v-if="loading" class="loading">Loading...</div>
       </div>
@@ -19,6 +20,7 @@
   import instance from '@/axios';
   import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
   import SentenceSetComponent from './SentenceSetComponent.vue';
+import router from '@/router';
 
   const emit = defineEmits(['sentenceSetCountReceived']);
   
@@ -122,6 +124,15 @@
       fetchsentenceSetList();
     }
   }
+
+  // 문장 세트 클릭 시 문장 세트 & 문장 목록 조회 페이지로 이동
+  const navigateSentence = (sentenceSetId, event) => {
+    if (event.target.closest(".more-button")) {
+      return;
+    }
+
+    router.push({ 'path': `/sentences/${sentenceSetId}` });
+  }
   
   </script>
   
@@ -138,6 +149,10 @@
   
   .sentenceset-container {
     max-width: 85%;
+  }
+
+  .sentenceset-item {
+    cursor: pointer;
   }
   
   .loading {

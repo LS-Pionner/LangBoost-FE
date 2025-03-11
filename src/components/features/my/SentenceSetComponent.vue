@@ -5,7 +5,7 @@
             <div class="sentence-set-button">
                 <i v-if="isAdmin || !isReadOnly" 
                     class="fa-solid fa-ellipsis-vertical more-button" 
-                    @click="openEditModal">
+                    @click.stop="openEditModal">
                 </i>
             </div>
             <EditModalComponent 
