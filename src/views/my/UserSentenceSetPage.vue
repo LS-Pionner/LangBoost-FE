@@ -23,7 +23,7 @@
   
 <script setup>
 import instance from '@/axios';
-import SentenceSetListComponent from '@/components/features/my/SentenceSetListComponent.vue';
+import SentenceSetListComponent from '@/components/features/sentenceset/SentenceSetListComponent.vue';
 import AddModalComponent from '@/components/UI/modals/AddModalComponent.vue';
 import store from '@/store';
 import { computed, ref } from 'vue';
