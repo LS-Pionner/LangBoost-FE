@@ -70,12 +70,12 @@ const truncatedTitle = computed(() => {
     return truncateString(props.sentenceSet.title, 15);
 });
 
-// UserSentenceSetListComponent에 삭제된 문장 세트 id 전달
+// SentenceSetListComponent에 삭제된 문장 세트 id 전달
 const handleDelete = (id) => {
     emit('deleteSentenceSet', id);
 }
 
-// UserSentenceSetListComponent에 수정된 문장 세트 id와 title 전달
+// SentenceSetListComponent에 수정된 문장 세트 id와 title 전달
 const modifyHandle = (modifiedSentenceSet) => {
     emit('modifySentenceSet', modifiedSentenceSet);
 }

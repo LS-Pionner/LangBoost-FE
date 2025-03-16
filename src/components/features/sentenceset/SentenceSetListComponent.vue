@@ -20,7 +20,7 @@
   import instance from '@/axios';
   import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
   import SentenceSetComponent from './SentenceSetComponent.vue';
-import router from '@/router';
+  import router from '@/router';
 
   const emit = defineEmits(['sentenceSetCountReceived']);
   
@@ -69,10 +69,10 @@ import router from '@/router';
 
   onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
-    fetchsentenceSetList();
+    fetchSentenceSetList();
   });
   
-  const fetchsentenceSetList = async () => {
+  const fetchSentenceSetList = async () => {
     // API에서 문장 데이터를 가져오는 함수
     if (isLastPage.value || loading.value) {
       return;
@@ -121,7 +121,7 @@ import router from '@/router';
     const container = event.target;
   
     if (container.scrollHeight - container.scrollTop <= container.clientHeight + 10) {
-      fetchsentenceSetList();
+      fetchSentenceSetList();
     }
   }
 
@@ -131,7 +131,11 @@ import router from '@/router';
       return;
     }
 
-    router.push({ 'path': `/sentences/${sentenceSetId}` });
+    if (props.isReadOnly) {
+      router.push({ 'path': `/public-sentences/${sentenceSetId}` });
+    } else {
+      router.push({ 'path': `/private-sentences/${sentenceSetId}` });
+    }
   }
   
   </script>

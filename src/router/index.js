@@ -4,7 +4,8 @@ import SignComponent from "@/views/auth/SignComponent.vue";
 import PublicSentenceSetPage from "@/views/public/PublicSentenceSetPage.vue";
 import UserSentenceSetPage from "@/views/my/UserSentenceSetPage.vue";
 import MyPage from "@/views/my/MyPage.vue";
-import SentenceListPage from "@/views/SentenceListPage.vue";
+import UserSentenceListPage from "@/views/my/UserSentenceListPage.vue";
+import PublicSentenceListPage from "@/views/public/PublicSentenceListPage.vue";
 
 const routes = [
   {
@@ -23,9 +24,14 @@ const routes = [
     component: UserSentenceSetPage,
   },
   {
-    path: "/sentences/:sentenceId",
-    name: "SentenceListPage",
-    component: SentenceListPage,
+    path: "/public-sentences/:sentenceSetId",
+    name: "PublicSentenceListPage",
+    component: PublicSentenceListPage,
+  },
+  {
+    path: "/private-sentences/:sentenceSetId",
+    name: "UserSentenceListPage",
+    component: UserSentenceListPage,
   },
   {
     path: "/sign",
