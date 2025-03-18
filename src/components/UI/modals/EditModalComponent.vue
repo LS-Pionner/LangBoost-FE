@@ -1,7 +1,7 @@
 <template>
     <div class="modal-overlay">
-        <div class="modal-content">
-            <i class="fa-regular fa-circle-xmark close-modal" @click.stop="closeEditModal"></i>
+        <div class="modal-content" @click.stop>
+            <i class="fa-regular fa-circle-xmark close-modal" @click="closeEditModal"></i>
             <i class="fa-regular fa-pen-to-square modal-button" @click="openModifyModal"></i>
             <i class="fa-regular fa-trash-can modal-button modal-discard" @click="deleteSentenceSet"></i>
         </div>
@@ -18,18 +18,15 @@
 
 <script setup>
 import instance from '@/axios';
-import { defineEmits, defineProps, ref } from 'vue';
+import { computed, defineEmits, defineProps, ref } from 'vue';
 import { truncateString } from '@/utils/truncate';
 import ModifyModalComponent from './ModifyModalComponent.vue';
+import store from '@/store';
 
 const props = defineProps({
     sentenceSet: {
         type: Object,
         required: true,
-    },
-    isAdmin: {
-        type: Boolean,
-        required: true
     },
     isReadOnly: {
         type: Boolean,
@@ -38,6 +35,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['closeEdit', 'deleteSentenceSet', 'modifySentenceSet']);
+
+const isAdmin = computed(() => store.state.isAdmin);    // 관리자 여부
 
 // 문장 세트 수정 모달창 id
 const activeModalId = ref(null);
@@ -57,7 +56,7 @@ const deleteSentenceSet = async () => {
             let res;
             if (!props.isReadOnly) {
                 res = await instance.delete(`api/v1/sentence-set/${props.sentenceSet.id}`);
-            } else if (props.isAdmin && props.isReadOnly) {
+            } else if (isAdmin.value && props.isReadOnly) {
                 res = await instance.delete(`api/v1/admin/sentence-set/${props.sentenceSet.id}`);
             }
             

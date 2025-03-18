@@ -1,6 +1,6 @@
 <template>
     <div class="modify-modal-overlay">
-        <div class="modify-modal-content">
+        <div class="modify-modal-content" @click.stop>
             <i class="fa-regular fa-circle-xmark close-modify-modal" @click="closeModifyModal"></i>
             <h3>세트 이름 변경</h3>
             <input 

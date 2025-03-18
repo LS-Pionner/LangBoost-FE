@@ -1,12 +1,10 @@
 <template>
     <div class="scrollable-container" @scroll="handleScroll">
-      <div :class="{'sentenceset-container' : isAdmin || !isReadOnly}">
-        <SentenceSetComponent class="sentenceset-item"
+      <div class="sentenceset-container">
+        <UserSentenceSetComponent class="sentenceset-item"
           v-for="sentenceSet in sentenceSetList"
           :key="sentenceSet.id"
           :sentenceSet="sentenceSet"
-          :isReadOnly="isReadOnly"
-          :isAdmin="isAdmin"
           @deleteSentenceSet="handleDelete"
           @modifySentenceSet="handleModify"
           @click="(event) => navigateSentence(sentenceSet.id, event)"
@@ -19,7 +17,7 @@
   <script setup>
   import instance from '@/axios';
   import { ref, onMounted, defineEmits, defineProps, watch } from 'vue';
-  import SentenceSetComponent from './SentenceSetComponent.vue';
+  import UserSentenceSetComponent from './UserSentenceSetComponent.vue';
   import router from '@/router';
 
   const emit = defineEmits(['sentenceSetCountReceived']);
@@ -35,14 +33,6 @@
     newSentenceSet: {
       type: Object,
       required: false
-    },
-    isAdmin: {
-      type: Boolean,
-      required: true
-    },
-    isReadOnly: {
-      type: Boolean,
-      required: true
     },
   });
 
@@ -81,12 +71,7 @@
     loading.value = true;
   
     try {
-      let res;
-      if (!props.isReadOnly) {
-        res = await instance.get(`api/v1/sentence-set?offset=${offset.value}`);
-      } else {
-        res = await instance.get(`api/v1/public/sentence-set?offset=${offset.value}`);
-      }
+      const res = await instance.get(`api/v1/sentence-set?offset=${offset.value}`);
         
       if (res.data.success) {
         const data = res.data.payload;
@@ -131,11 +116,7 @@
       return;
     }
 
-    if (props.isReadOnly) {
-      router.push({ 'path': `/public-sentences/${sentenceSetId}` });
-    } else {
-      router.push({ 'path': `/private-sentences/${sentenceSetId}` });
-    }
+    router.push({ 'path': `/private-sentences/${sentenceSetId}` });
   }
   
   </script>

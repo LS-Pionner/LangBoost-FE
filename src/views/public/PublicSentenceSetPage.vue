@@ -6,9 +6,7 @@
                 <span class="content-count">총 문장 세트 개수: {{ sentenceSetCount }}</span>
                 <i v-if="isAdmin" class="fa-regular fa-square-plus content-add-button" @click="openAddModal"></i>
             </div>
-            <SentenceSetListComponent
-                :isAdmin="isAdmin"
-                :isReadOnly="true"
+            <PublicSentenceSetListComponent
                 :newSentenceSet="addedSentenceSet"
                 @sentenceSetCountReceived="handleSentenceSetCount" 
             />
@@ -23,7 +21,7 @@
   
 <script setup>
 import { computed, ref } from 'vue';
-import SentenceSetListComponent from '@/components/features/sentenceset/SentenceSetListComponent.vue';
+import PublicSentenceSetListComponent from '@/components/features/sentenceset/PublicSentenceSetListComponent.vue';
 import AddModalComponent from '@/components/UI/modals/AddModalComponent.vue';
 import store from '@/store';
 import instance from '@/axios';
@@ -50,7 +48,6 @@ const closeAddModal = () => {
 const addSentenceSet = async (name) => {
     try {
         const res = await instance.post("/api/v1/admin/sentence-set", { 'title': name });
-        console.log('>>>', res);
 
         if (res.data.success) {
             addedSentenceSet.value = res.data.payload;

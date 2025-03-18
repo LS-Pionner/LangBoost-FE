@@ -6,9 +6,7 @@
                 <span class="content-count">총 문장 세트 개수: {{ sentenceSetCount }}</span>
                 <i class="fa-regular fa-square-plus content-add-button" @click="openAddModal"></i>
             </div>
-            <SentenceSetListComponent
-                :isAdmin="isAdmin"
-                :isReadOnly="false"
+            <UserSentenceSetListComponent
                 :newSentenceSet="addedSentenceSet"
                 @sentenceSetCountReceived="handleSentenceSetCount" 
             />
@@ -23,12 +21,10 @@
   
 <script setup>
 import instance from '@/axios';
-import SentenceSetListComponent from '@/components/features/sentenceset/SentenceSetListComponent.vue';
+import UserSentenceSetListComponent from '@/components/features/sentenceset/UserSentenceSetListComponent.vue';
 import AddModalComponent from '@/components/UI/modals/AddModalComponent.vue';
-import store from '@/store';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-const isAdmin = computed(() => store.state.isAdmin);    // 관리자 권한 여부
 const sentenceSetCount = ref(0);    // 문장 세트 개수
 const isVisible = ref(false);  // 모달 오픈 여부
 const addedSentenceSet = ref(null); // 부모 컴포넌트에서 관리되는 문장 세트 목록
@@ -50,7 +46,6 @@ const closeAddModal = () => {
 const addSentenceSet = async (name) => {
     try {
         const res = await instance.post("/api/v1/sentence-set", { 'title': name });
-        console.log('>>>', res);
 
         if (res.data.success) {
             addedSentenceSet.value = res.data.payload;
