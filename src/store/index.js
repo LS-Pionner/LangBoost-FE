@@ -33,6 +33,7 @@ export default createStore({
     },
     logout({ commit }) {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("isAdmin");
       commit("logout");
     },
   },
