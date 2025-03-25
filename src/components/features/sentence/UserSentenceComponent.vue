@@ -4,10 +4,7 @@
             <h3>{{ sentence.content }}</h3>
             <div class="sentence-button">
                 <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button"></i>
-                <i v-if="isAdmin || !isReadOnly" 
-                    class="fa-solid fa-ellipsis-vertical more-button" 
-                    @click.stop="openEditModal">
-                </i>
+                <i class="fa-solid fa-ellipsis-vertical more-button" @click.stop="openEditModal"></i>
             </div>
             <LearningModalComponent 
                 v-if="activeModalId === sentence.id"
@@ -30,14 +27,6 @@ const props = defineProps({
     sentence: {
         type: Object,
         required: true
-    },
-    isAdmin: {
-      type: Boolean,
-      required: true
-    },
-    isReadOnly: {
-      type: Boolean,
-      required: true
     },
 });
 

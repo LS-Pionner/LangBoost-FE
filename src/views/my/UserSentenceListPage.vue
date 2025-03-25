@@ -15,9 +15,7 @@
                     <button class="edit-item">편집</button>
                 </div>
             </div>
-            <SentenceListComponent 
-                :isAdmin="isAdmin"
-                :isReadOnly="false"
+            <UserSentenceListComponent 
                 :sentenceSetId="sentenceSetId"
                 @sentenceSetRecieved="handleSentenceSetReceived"
             />
@@ -26,9 +24,8 @@
 </template>
 
 <script setup>
-import SentenceListComponent from '@/components/features/sentence/SentenceListComponent.vue';
-import { computed, ref } from 'vue';
-import store from '@/store';
+import UserSentenceListComponent from '@/components/features/sentence/UserSentenceListComponent.vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -36,7 +33,6 @@ const route = useRoute();
 // 동적 라우팅 시 받아오는 문장 세트 id
 const sentenceSetId = Number(route.params.sentenceSetId);
 
-const isAdmin = computed(() => store.state.isAdmin);    // 관리자 권한 여부
 const sentenceSet = ref(null);  // 하위 컴포넌트로부터 받아온 문장 세트
 
 const handleSentenceSetReceived = (sentenceSetData) => {

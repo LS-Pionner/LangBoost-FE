@@ -1,13 +1,11 @@
 <template>
     <div class="scrollable-container" @scroll="handleScroll">
         <div class="sentence-container">
-            <SentenceComponent 
+            <UserSentenceComponent 
                 class="sentence-item"
                 v-for="sentence in sentenceList"
                 :key="sentence.id"
                 :sentence="sentence"
-                :isAdmin="isAdmin"
-                :isReadOnly="isReadOnly"
                 @modifySentence="handleModify"
             />
             <div v-if="loading" class="loading">Loading...</div>
@@ -18,7 +16,7 @@
 <script setup>
 import instance from '@/axios';
 import { ref, onMounted, defineProps, defineEmits } from 'vue';
-import SentenceComponent from './SentenceComponent.vue';
+import UserSentenceComponent from './UserSentenceComponent.vue';
 
 const sentenceList = ref([]);  // API에서 가져온 문장 목록
 const offset = ref(0);  // param으로 전달할 offset (데이터를 가져올 시작 위치)
@@ -29,14 +27,6 @@ const isLastPage = ref(false);  // 마지막 페이지 여부
 const props = defineProps({
     sentenceSetId: {
         type: Number,
-        required: true
-    },
-    isAdmin: {
-        type: Boolean,
-        required: true
-    },
-    isReadOnly: {
-        type: Boolean,
         required: true
     },
 });
@@ -66,13 +56,7 @@ const fetchSentenceList = async () => {
     loading.value = true;
 
     try {
-        let res;
-        if (!props.isReadOnly) {
-            res = await instance.get(`api/v1/sentence-set/${props.sentenceSetId}?offset=${offset.value}`);
-        } else {
-            res = await instance.get(`api/v1/public/sentence-set/${props.sentenceSetId}?offset=${offset.value}`);
-        }
-
+        const res = await instance.get(`api/v1/sentence-set/${props.sentenceSetId}?offset=${offset.value}`);
         
         if (res.data.success) {
             const data = res.data.payload;
