@@ -1,7 +1,8 @@
 <template>
-    <div class="sentence-item">
+    <div class="sentence-item" @click="toggleMeaning">
         <div class="sentence-header">
-            <h3>{{ sentence.content }}</h3>
+            <h3 v-if="visibleMeaningId === null">{{ sentence.content }}</h3>
+            <h3 v-else>{{ sentence.meaning }}</h3>
             <div class="sentence-button">
                 <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button"></i>
                 <i class="fa-solid fa-ellipsis-vertical more-button" @click.stop="openEditModal"></i>
@@ -34,6 +35,8 @@ const emit = defineEmits(['modifySentence']);
 
 // 현재 활성화된 모달창 id
 const activeModalId = ref(null);
+// 의미를 보여줄 문장 ID
+const visibleMeaningId = ref(null);
 
 // 편집 모달창 열기
 const openEditModal = () => {
@@ -48,6 +51,11 @@ const closeEditModal = () => {
 // SentenceListComponent에 수정된 문장 전달
 const modifyHandle = (modifiedSentence) => {
     emit('modifySentence', modifiedSentence);
+}
+
+// 문장 의미 토글 함수
+const toggleMeaning = () => {
+    visibleMeaningId.value = visibleMeaningId.value === null ? props.sentence.id : null;
 }
 
 </script>

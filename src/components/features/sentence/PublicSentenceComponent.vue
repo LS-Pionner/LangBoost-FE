@@ -1,7 +1,8 @@
 <template>
-    <div class="sentence-item">
+    <div class="sentence-item" @click="toggleMeaning">
         <div class="sentence-header">
-            <h3>{{ sentence.content }}</h3>
+            <h3 v-if="visibleMeaningId === null">{{ sentence.content }}</h3>
+            <h3 v-else>{{ sentence.meaning }}</h3>
             <div class="sentence-button">
                 <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button"></i>
             </div>
@@ -10,7 +11,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 
 const props = defineProps({
     sentence: {
@@ -19,7 +20,13 @@ const props = defineProps({
     },
 });
 
-console.log(props.sentence);
+// 의미를 보여줄 문장 ID
+const visibleMeaningId = ref(null);
+
+// 문장 의미 토글 함수
+const toggleMeaning = () => {
+    visibleMeaningId.value = visibleMeaningId.value === null ? props.sentence.id : null;
+}
 
 </script>
 
