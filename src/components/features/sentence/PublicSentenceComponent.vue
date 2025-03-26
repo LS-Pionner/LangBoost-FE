@@ -4,39 +4,22 @@
             <h3>{{ sentence.content }}</h3>
             <div class="sentence-button">
                 <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button"></i>
-                <i v-if="isAdmin" 
-                    class="fa-solid fa-ellipsis-vertical more-button" 
-                    @click.stop="openEditModal">
-                </i>
             </div>
-        </div>
-        <div class="sentence-footer">
-            {{ sentence.learningStatus }}
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps } from 'vue';
 
 const props = defineProps({
     sentence: {
         type: Object,
         required: true
     },
-    isAdmin: {
-      type: Boolean,
-      required: true
-    },
 });
 
-// 현재 활성화된 모달창 id
-const activeModalId = ref(null);
-
-// 편집 모달창 열기
-const openEditModal = () => {
-    activeModalId.value = props.sentence.id;
-}
+console.log(props.sentence);
 
 </script>
 

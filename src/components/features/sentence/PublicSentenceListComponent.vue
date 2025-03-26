@@ -6,8 +6,6 @@
                 v-for="sentence in sentenceList"
                 :key="sentence.id"
                 :sentence="sentence"
-                :isAdmin="isAdmin"
-                @modifySentence="handleModify"
             />
             <div v-if="loading" class="loading">Loading...</div>
         </div>
@@ -36,15 +34,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['sentenceSetRecieved']);
-
-// 문장 수정 이벤트 수신
-const handleModify = (modifiedSentence) => {
-    const sentence = sentenceList.value.find(sen => sen.id === modifiedSentence.id);
-
-    if (sentence) {
-        sentence.learningStatus = modifiedSentence.learningStatus;
-    }
-}
 
 onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드

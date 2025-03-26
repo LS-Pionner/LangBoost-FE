@@ -6,16 +6,18 @@
             </div>
             <div class="content-header-items">
                 <div class="content-header-learning">
-                    <button class="learning-item">전체</button>
-                    <button class="learning-item">학습중</button>
-                    <button class="learning-item">학습완료</button>
+                    <button class="learning-item" @click="setLearningFilter('all')">전체</button>
+                    <button class="learning-item" @click="setLearningFilter('학습 중')">학습 중</button>
+                    <button class="learning-item" @click="setLearningFilter('학습 완료')">학습 완료</button>
                 </div>
                 <div class="content-header-edit">
                     <button class="edit-item">토글</button>
                     <button class="edit-item">편집</button>
                 </div>
             </div>
+            <!-- ref 추가 -->
             <UserSentenceListComponent 
+                ref="userSentenceListComponent"
                 :sentenceSetId="sentenceSetId"
                 @sentenceSetRecieved="handleSentenceSetReceived"
             />
@@ -35,8 +37,17 @@ const sentenceSetId = Number(route.params.sentenceSetId);
 
 const sentenceSet = ref(null);  // 하위 컴포넌트로부터 받아온 문장 세트
 
+const userSentenceListComponent = ref(null);    // 하위 컴포넌트 참조를 위함
+
 const handleSentenceSetReceived = (sentenceSetData) => {
     sentenceSet.value = sentenceSetData;
+}
+
+const setLearningFilter = (status) => {
+    if (userSentenceListComponent.value) {
+        console.log(status + ' 클릭');
+        userSentenceListComponent.value.setLearningStatusFilter(status);  // 하위 컴포넌트의 함수 호출
+    }
 }
 
 </script>

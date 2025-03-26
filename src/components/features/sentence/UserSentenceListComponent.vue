@@ -3,7 +3,7 @@
         <div class="sentence-container">
             <UserSentenceComponent 
                 class="sentence-item"
-                v-for="sentence in sentenceList"
+                v-for="sentence in filteredSentenceList"
                 :key="sentence.id"
                 :sentence="sentence"
                 @modifySentence="handleModify"
@@ -15,14 +15,16 @@
     
 <script setup>
 import instance from '@/axios';
-import { ref, onMounted, defineProps, defineEmits } from 'vue';
+import { ref, onMounted, defineProps, defineEmits, defineExpose } from 'vue';
 import UserSentenceComponent from './UserSentenceComponent.vue';
 
 const sentenceList = ref([]);  // API에서 가져온 문장 목록
+const filteredSentenceList = ref([]);   // 학습상태가 필터링 된 문장 목록
 const offset = ref(0);  // param으로 전달할 offset (데이터를 가져올 시작 위치)
 const limit = 10; // param으로 전달할 limit (한 번에 가져올 데이터 수)
 const loading = ref(false); // 데이터 로딩 상태
 const isLastPage = ref(false);  // 마지막 페이지 여부
+const learningStatusFilter = ref('all');    // 필터 상태
 
 const props = defineProps({
     sentenceSetId: {
@@ -39,6 +41,7 @@ const handleModify = (modifiedSentence) => {
 
     if (sentence) {
         sentence.learningStatus = modifiedSentence.learningStatus;
+        updateFilteredList();
     }
 }
 
@@ -46,6 +49,15 @@ onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchSentenceList();
 });
+
+// 학습상태가 필터링 된 후의 문장 리스트
+const updateFilteredList = () => {
+    if (learningStatusFilter.value === 'all') {
+        filteredSentenceList.value = sentenceList.value;
+    } else {
+        filteredSentenceList.value = sentenceList.value.filter(sentence => sentence.learningStatus === learningStatusFilter.value);
+    }
+}
 
 const fetchSentenceList = async () => {
     // API에서 문장 데이터를 가져오는 함수
@@ -60,17 +72,16 @@ const fetchSentenceList = async () => {
         
         if (res.data.success) {
             const data = res.data.payload;
-
             emit("sentenceSetRecieved", data.sentenceSet);
+
+            sentenceList.value = [...sentenceList.value, ...data.sentenceList];
+            updateFilteredList();
             
             // 불러온 데이터가 limit 미만일 때
             if (data.sentenceList.length < limit) {
                 isLastPage.value = true;
-                sentenceList.value = [...sentenceList.value, ...data.sentenceList];
-                return;
             }
             
-            sentenceList.value = [...sentenceList.value, ...data.sentenceList];
             offset.value += limit;
         } else {
             console.error("API 오류: ", res.data.error);
@@ -90,6 +101,16 @@ const handleScroll = (event) => {
         fetchSentenceList();
     }
 }
+
+// 상위 컴포넌트의 학습 상태 필터링 버튼 클릭 이벤트 처리
+const setLearningStatusFilter = (status) => {
+    learningStatusFilter.value = status;
+    updateFilteredList();
+}
+
+defineExpose({
+    setLearningStatusFilter,
+})
 
 </script>
 
