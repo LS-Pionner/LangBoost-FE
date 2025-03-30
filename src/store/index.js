@@ -4,6 +4,7 @@ export default createStore({
   state: {
     isAuthenticated: false,
     isAdmin: JSON.parse(localStorage.getItem('isAdmin')) || false,
+    detailSentence: JSON.parse(localStorage.getItem('detailSentence')) || null,
   },
   mutations: {
     setAuthentication(state, status) {
@@ -17,24 +18,33 @@ export default createStore({
       state.isAuthenticated = false;
       state.isAdmin = false;
     },
+    setDetailSentence(state, sentence) {
+      state.detailSentence = sentence;
+      localStorage.setItem('detailSentence', JSON.stringify(sentence));
+    },
   },
   actions: {
     initAuthentication({ commit }) {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem('accessToken');
 
       if (accessToken) {
-        commit("setAuthentication", true);
+        commit('setAuthentication', true);
       } else {
-        commit("setAuthentication", false);
+        commit('setAuthentication', false);
       }
     },
     initAdmin({ commit }, status) {
-      commit("setAdmin", status);
+      commit('setAdmin', status);
     },
     logout({ commit }) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("isAdmin");
-      commit("logout");
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('detailSentence');
+
+      commit('logout');
+    },
+    updateDetailSentence({ commit }, sentence) {
+      commit('setDetailSentence', sentence);
     },
   },
 });

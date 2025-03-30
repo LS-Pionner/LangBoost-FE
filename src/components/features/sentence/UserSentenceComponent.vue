@@ -4,7 +4,7 @@
             <h3 v-if="visibleMeaningId === null">{{ sentence.content }}</h3>
             <h3 v-else>{{ sentence.meaning }}</h3>
             <div class="sentence-button">
-                <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button"></i>
+                <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button" @click.stop="navigateSentenceDetail"></i>
                 <i class="fa-solid fa-ellipsis-vertical more-button" @click.stop="openEditModal"></i>
             </div>
             <LearningModalComponent 
@@ -23,6 +23,8 @@
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
 import LearningModalComponent from '@/components/UI/modals/LearningModalComponent.vue';
+import router from '@/router';
+import store from '@/store';
 
 const props = defineProps({
     sentence: {
@@ -56,6 +58,12 @@ const modifyHandle = (modifiedSentence) => {
 // 문장 의미 토글 함수
 const toggleMeaning = () => {
     visibleMeaningId.value = visibleMeaningId.value === null ? props.sentence.id : null;
+}
+
+// 문장 상세 페이지 이동 함수
+const navigateSentenceDetail = () => {
+    store.dispatch("updateDetailSentence", props.sentence);
+    router.push({ path: '/private-sentences/detail' });
 }
 
 </script>
