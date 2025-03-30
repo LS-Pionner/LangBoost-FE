@@ -6,13 +6,16 @@
             </div>
             <div class="content-header-items">
                 <div class="content-header-learning">
-                    <button class="learning-item" @click="setLearningFilter('all')">전체</button>
-                    <button class="learning-item" @click="setLearningFilter('학습 중')">학습 중</button>
-                    <button class="learning-item" @click="setLearningFilter('학습 완료')">학습 완료</button>
+                    <WhiteButtonComponent class="learning-item" @click="setLearningFilter('all')">전체</WhiteButtonComponent>
+                    <WhiteButtonComponent class="learning-item" @click="setLearningFilter('학습 중')">학습 중</WhiteButtonComponent>
+                    <WhiteButtonComponent class="learning-item" @click="setLearningFilter('학습 완료')">학습 완료</WhiteButtonComponent>
                 </div>
                 <div class="content-header-edit">
-                    <button class="edit-item">토글</button>
-                    <button class="edit-item">편집</button>
+                    <!-- 토글 on -->
+                    <i class="fa-solid fa-toggle-on edit-item"></i>
+                    <!-- 토글 off -->
+                    <!-- <i class="fa-solid fa-toggle-off edit-item"></i> -->
+                    <i class="fa-solid fa-pen-to-square edit-item"></i>
                 </div>
             </div>
             <!-- ref 추가 -->
@@ -27,6 +30,7 @@
 
 <script setup>
 import UserSentenceListComponent from '@/components/features/sentence/UserSentenceListComponent.vue';
+import WhiteButtonComponent from '@/components/UI/buttons/WhiteButtonComponent.vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -85,7 +89,7 @@ const setLearningFilter = (status) => {
 
 .learning-item {
     padding: 3px;
-    margin: 0 5px;
+    margin: 5px 5px;
 }
 
 .content-header-edit {
@@ -95,6 +99,11 @@ const setLearningFilter = (status) => {
 .edit-item {
     position: relative;
     padding: 3px;
-    margin: 0 5px;
+    margin: 5px 10px;
+    font-size: 24px;
+}
+
+.edit-item:hover {
+    cursor: pointer;
 }
 </style>
