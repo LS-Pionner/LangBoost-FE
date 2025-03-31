@@ -122,7 +122,9 @@ const login = async () => {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
       store.dispatch("initAuthentication");
-      store.dispatch("initAdmin", res.data.payload.isAdmin);
+      // 서버로부터 전달 받은 관리자 여부 쿠키
+      const isAdminCookie = getCookie("isAdmin");
+      store.dispatch("initAdmin", isAdminCookie);
       router.push({ path: "/" }); // 메인 페이지로 이동
     } else {
       window.alert("유효하지 않은 토큰입니다.");
@@ -171,6 +173,15 @@ const register = async () => {
     }
   }
 };
+
+// 쿠키에서 값 가져오는 함수
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop().split(';').shift();
+  }
+}
 </script>
 
 <style scoped>
