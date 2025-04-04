@@ -6,6 +6,8 @@
                 v-for="sentence in filteredSentenceList"
                 :key="sentence.id"
                 :sentence="sentence"
+                :showMeaning="showMeaning"
+                :resetVisibleMeaningId="resetVisibleMeaningId"
                 @modifySentence="handleModify"
             />
             <div v-if="loading" class="loading">Loading...</div>
@@ -15,7 +17,7 @@
     
 <script setup>
 import instance from '@/axios';
-import { ref, onMounted, defineProps, defineEmits, defineExpose } from 'vue';
+import { ref, onMounted, watch, defineProps, defineEmits, defineExpose } from 'vue';
 import UserSentenceComponent from './UserSentenceComponent.vue';
 
 const sentenceList = ref([]);  // API에서 가져온 문장 목록
@@ -25,10 +27,15 @@ const limit = 10; // param으로 전달할 limit (한 번에 가져올 데이터
 const loading = ref(false); // 데이터 로딩 상태
 const isLastPage = ref(false);  // 마지막 페이지 여부
 const learningStatusFilter = ref('all');    // 필터 상태
+const resetVisibleMeaningId = ref(false);
 
 const props = defineProps({
     sentenceSetId: {
         type: Number,
+        required: true
+    },
+    showMeaning: {
+        type: Boolean,
         required: true
     },
 });
@@ -48,6 +55,11 @@ const handleModify = (modifiedSentence) => {
 onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchSentenceList();
+});
+
+// showMeaning 값이 변경될 때 resetVisibleMeaningId를 true로 설정
+watch(() => props.showMeaning, (newValue) => {
+    resetVisibleMeaningId.value = newValue;
 });
 
 // 학습상태가 필터링 된 후의 문장 리스트

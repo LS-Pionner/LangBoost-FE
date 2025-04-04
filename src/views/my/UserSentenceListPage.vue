@@ -12,9 +12,9 @@
                 </div>
                 <div class="content-header-edit">
                     <!-- 토글 on -->
-                    <i class="fa-solid fa-toggle-on edit-item"></i>
+                    <i v-if="showMeaning" class="fa-solid fa-toggle-on edit-item" @click="toggleMeaning"></i>
                     <!-- 토글 off -->
-                    <!-- <i class="fa-solid fa-toggle-off edit-item"></i> -->
+                    <i v-else class="fa-solid fa-toggle-off edit-item" @click="toggleMeaning"></i>
                     <i class="fa-solid fa-pen-to-square edit-item"></i>
                 </div>
             </div>
@@ -22,6 +22,7 @@
             <UserSentenceListComponent 
                 ref="userSentenceListComponent"
                 :sentenceSetId="sentenceSetId"
+                :showMeaning="showMeaning"
                 @sentenceSetRecieved="handleSentenceSetReceived"
             />
         </div>
@@ -43,6 +44,8 @@ const sentenceSet = ref(null);  // 하위 컴포넌트로부터 받아온 문장
 
 const userSentenceListComponent = ref(null);    // 하위 컴포넌트 참조를 위함
 
+const showMeaning = ref(false); // 문장의 meaning을 보여줄지 여부를 보여주는 토글
+
 const handleSentenceSetReceived = (sentenceSetData) => {
     sentenceSet.value = sentenceSetData;
 }
@@ -52,6 +55,11 @@ const setLearningFilter = (status) => {
         console.log(status + ' 클릭');
         userSentenceListComponent.value.setLearningStatusFilter(status);  // 하위 컴포넌트의 함수 호출
     }
+}
+
+// 문장 meaning 토글
+const toggleMeaning = () => {
+    showMeaning.value = !showMeaning.value;
 }
 
 </script>

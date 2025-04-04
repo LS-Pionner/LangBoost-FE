@@ -1,8 +1,14 @@
 <template>
     <div class="sentence-item" @click="toggleMeaning">
         <div class="sentence-header">
-            <h3 v-if="visibleMeaningId === null">{{ sentence.content }}</h3>
-            <h3 v-else>{{ sentence.meaning }}</h3>
+            <h3 v-if="visibleMeaningId === null">
+                <span v-if="showMeaning">{{ sentence.meaning }}</span>
+                <span v-else>{{ sentence.content }}</span>
+            </h3>
+            <h3 v-else>
+                <span v-if="showMeaning">{{ sentence.content }}</span>
+                <span v-else>{{ sentence.meaning }}</span>
+            </h3>
             <div class="sentence-button">
                 <i class="fa-solid fa-up-right-and-down-left-from-center enlarge-button" @click.stop="navigateSentenceDetail"></i>
                 <i class="fa-solid fa-ellipsis-vertical more-button" @click.stop="openEditModal"></i>
@@ -21,7 +27,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, ref, watch } from 'vue';
 import LearningModalComponent from '@/components/UI/modals/LearningModalComponent.vue';
 import router from '@/router';
 import store from '@/store';
@@ -31,14 +37,26 @@ const props = defineProps({
         type: Object,
         required: true
     },
+    showMeaning: {
+        type: Boolean,
+        required: true
+    },
+    resetVisibleMeaningId: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const emit = defineEmits(['modifySentence']);
 
-// 현재 활성화된 모달창 id
-const activeModalId = ref(null);
-// 의미를 보여줄 문장 ID
-const visibleMeaningId = ref(null);
+const activeModalId = ref(null);    // 현재 활성화된 모달창 id
+const visibleMeaningId = ref(null); // 의미를 보여줄 문장 ID
+
+// showMeaning이 변경되면 visibleMeaningId를 null로 초기화
+watch(() => props.resetVisibleMeaningId, () => {
+    visibleMeaningId.value = null;
+});
+
 
 // 편집 모달창 열기
 const openEditModal = () => {
