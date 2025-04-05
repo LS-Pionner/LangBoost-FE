@@ -9,6 +9,7 @@
                 :showMeaning="showMeaning"
                 :resetVisibleMeaningId="resetVisibleMeaningId"
                 @modifySentence="handleModify"
+                @deleteSentence="handleDelete"
             />
             <div v-if="loading" class="loading">Loading...</div>
         </div>
@@ -52,6 +53,11 @@ const handleModify = (modifiedSentence) => {
     }
 }
 
+// 문장 삭제 이벤트 수신
+const handleDelete = (deletedSentenceId) => {
+    filteredSentenceList.value = filteredSentenceList.value.filter(sen => sen.id !== deletedSentenceId);
+}
+
 onMounted(() => {
     // 컴포넌트가 마운트될 때 초기 데이터 로드
     fetchSentenceList();
@@ -81,6 +87,7 @@ const fetchSentenceList = async () => {
 
     try {
         const res = await instance.get(`api/v1/sentence-set/${props.sentenceSetId}?offset=${offset.value}`);
+        console.log(props.sentenceSetId);
         
         if (res.data.success) {
             const data = res.data.payload;

@@ -17,6 +17,7 @@
                 v-if="activeModalId === sentence.id"
                 :sentence="sentence"
                 @modifySentence="modifyHandle"
+                @deleteSentence="deleteHandle"
                 @closeEdit="closeEditModal"
             />
         </div>
@@ -47,7 +48,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['modifySentence']);
+const emit = defineEmits(['modifySentence', 'deleteSentence']);
 
 const activeModalId = ref(null);    // 현재 활성화된 모달창 id
 const visibleMeaningId = ref(null); // 의미를 보여줄 문장 ID
@@ -71,6 +72,11 @@ const closeEditModal = () => {
 // SentenceListComponent에 수정된 문장 전달
 const modifyHandle = (modifiedSentence) => {
     emit('modifySentence', modifiedSentence);
+}
+
+// SentenceListComponent에 삭제된 문장 전달
+const deleteHandle = (deletedSentenceId) => {
+    emit('deleteSentence', deletedSentenceId);
 }
 
 // 문장 의미 토글 함수

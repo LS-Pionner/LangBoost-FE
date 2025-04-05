@@ -2,8 +2,9 @@
     <div class="modal-overlay">
         <div class="modal-content">
             <i class="fa-regular fa-circle-xmark close-modal" @click.stop="closeEditModal"></i>
-            <i class="fa-solid fa-check modal-button" @click="setLearningStatus('COMPLETED')">학습 완료</i>
-            <i class="fa-solid fa-pen modal-button modal-discard" @click="setLearningStatus('IN_PROGRESS')">학습 중</i>
+            <i class="fa-solid fa-check modal-button" @click.stop="setLearningStatus('COMPLETED')">학습 완료</i>
+            <i class="fa-solid fa-pen modal-button" @click.stop="setLearningStatus('IN_PROGRESS')">학습 중</i>
+            <i class="fa-solid fa-trash modal-button modal-trash" @click.stop="deleteSentence">삭제</i>
         </div>
     </div>
 </template>
@@ -20,7 +21,7 @@ const props = defineProps({
 });
 console.log(props);
 
-const emit = defineEmits(['closeEdit', 'modifySentence']);
+const emit = defineEmits(['closeEdit', 'modifySentence', 'deleteSentence']);
 
 // 학습 상태
 const learningStatus = ref(null);
@@ -57,6 +58,25 @@ const modifyLearningStatus = async () => {
     }
 }
 
+// 문장 삭제 함수수
+const deleteSentence = async () => {
+    try {
+        const res = await instance.delete(`api/v1/sentence-set/sentence/${props.sentence.id}`);
+
+        if (res.data.success) {
+                emit('deleteSentence', props.sentence.id);
+
+                console.log(res.data.payload);
+                window.alert('문장이 삭제되었습니다.');
+
+                closeEditModal();
+            }
+        } catch (error) {
+            console.log(error);
+            window.alert('문장 삭제 중 에러가 발생했습니다.');
+        }
+}
+
 </script>
 
 <style scoped>
@@ -75,6 +95,8 @@ const modifyLearningStatus = async () => {
     color: #999;
     cursor: pointer;
     transition: color 0.3s;
+    display: flex;
+    justify-content: space-around;
 }
 
 .close-modal:hover {
@@ -83,7 +105,7 @@ const modifyLearningStatus = async () => {
 
 .modal-content {
     background: white;
-    padding: 30px;
+    /* padding: 15px; */
     position: relative;
     width: 100px;
     z-index: 1000;
@@ -94,6 +116,7 @@ const modifyLearningStatus = async () => {
     font-size: 16px;
     top: 20px;
     color: black;
+    margin-top: 15px;
 }
 
 .modal-button::before {
@@ -105,7 +128,7 @@ const modifyLearningStatus = async () => {
     color: #999;
 }
 
-.modal-discard {
-    margin-top: 15px;
+.modal-trash {
+    color: red;
 }
 </style>
