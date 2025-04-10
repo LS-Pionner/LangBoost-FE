@@ -19,10 +19,17 @@
         <BlueButtonComponent @click="goToSignup()">로그인</BlueButtonComponent>
       </template>
       <template v-else>
-        <div class="user-profile">
-          <img src="@/assets/user.svg" alt="User Icon" class="user-icon" />
-          <!-- BlueButtonComponent 컴포넌트 사용 -->
-          <BlueButtonComponent @click="logout()">로그아웃</BlueButtonComponent>
+        <div class="user-menu">
+          <img
+            src="@/assets/user.svg"
+            alt="User Icon"
+            class="user-icon"
+            @click="toggleMenu"
+          />
+          <div v-if="isMenuOpen" class="dropdown-menu">
+            <button @click="goToMyPage">마이페이지</button>
+            <button @click="logout">로그아웃</button>
+          </div>
         </div>
       </template>
     </div>
@@ -44,6 +51,12 @@ const router = useRouter();
 // 로그인 상태를 계산 속성으로 가져옵니다.
 const isAuthenticated = computed(() => store.state.isAuthenticated);
 
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+
 // searchQuery 변수 선언
 const searchQuery = ref("");
 
@@ -51,6 +64,10 @@ const searchQuery = ref("");
 const handleSearchQueryUpdate = (newQuery) => {
   searchQuery.value = newQuery;
   console.log("검색어 업데이트:", newQuery);
+};
+
+const goToMyPage = () => {
+  router.push("/mypage");
 };
 
 // 로그아웃 함수
@@ -89,11 +106,10 @@ const goToSignup = () => {
   padding: 10px 20px;
   background-color: white;
   color: black;
-  border-bottom: 2px solid black;
+  /* border-bottom 속성 제거 */
   /* 기본적으로 모바일을 위한 스타일 */
   flex-direction: row;
 }
-
 .navbar-logo img {
   height: 40px;
 }
@@ -224,7 +240,7 @@ const goToSignup = () => {
 }
 
 .search-box input::placeholder {
-    color: #7a7a7a;
+  color: #7a7a7a;
 }
 
 /* 드롭다운 스타일 */
@@ -255,7 +271,7 @@ const goToSignup = () => {
   background-color: #f9f9f9;
   min-width: 160px;
   left: 0; /* 왼쪽 정렬 */
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   border-radius: 5px;
 }
@@ -275,4 +291,38 @@ const goToSignup = () => {
   background-color: #4682b4;
 }
 
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-icon {
+  width: 40px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 120px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+  background: #f0f0f0;
+}
 </style>

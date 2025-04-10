@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <NavbarComponent />
+    <ScrollNavbar />
     <!-- 네비게이션 바 추가 -->
     <router-view></router-view>
     <!-- 라우터에 따라 페이지 내용 표시 -->
@@ -10,8 +11,8 @@
 
 <script setup>
 import NavbarComponent from "@/components/layout/NavbarComponent.vue";
+import ScrollNavbar from "./components/layout/ScrollNavbar.vue";
 import FooterComponent from "@/components/layout/FooterComponent.vue";
-
 </script>
 
 <style>
@@ -20,5 +21,6 @@ import FooterComponent from "@/components/layout/FooterComponent.vue";
   min-height: 100vh; /* 화면 최소 높이를 100vh로 설정 */
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 </style>

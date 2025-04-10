@@ -13,7 +13,7 @@
         </div>
 
         <div class="credits">
-          <div class="divider" />
+          <div class="divider"></div>
           <div class="div">
             <p class="p">© 2025 LangBoost. All rights reserved.</p>
           </div>
@@ -41,7 +41,8 @@ const handleScroll = (event) => {
 #wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 전체 화면의 높이를 차지하게 설정 */
+  z-index: -10000;
+  /* min-height: 100vh; 전체 화면의 높이를 차지하게 설정 */
 }
 
 main.content {
