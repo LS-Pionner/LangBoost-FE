@@ -87,7 +87,6 @@ const fetchSentenceList = async () => {
 
     try {
         const res = await instance.get(`api/v1/sentence-set/${props.sentenceSetId}?offset=${offset.value}`);
-        console.log(props.sentenceSetId);
         
         if (res.data.success) {
             const data = res.data.payload;

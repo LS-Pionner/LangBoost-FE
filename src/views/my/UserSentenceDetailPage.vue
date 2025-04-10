@@ -5,7 +5,7 @@
                 <BlueButtonComponent @click="goBack">세트로 돌아가기</BlueButtonComponent>
             </div>
             <div class="header-item right">
-                <i class="fa-solid fa-volume-high item-button"></i>
+                <i class="fa-solid fa-volume-high item-button" @click="soundPlay"></i>
                 <i class="fa-solid fa-pen-to-square item-button" @click="setEditMode"></i>
             </div>
         </div>
@@ -55,6 +55,39 @@ const editSentence = ref({...detailSentence.value});
 // 이전 페이지로 이동
 const goBack = () => {
     router.back();
+}
+
+// 문장 재생 함수
+const soundPlay = async () => {
+    try {
+        // 요청 데이터
+        const requestData = {
+            language: 'ENGLISH',
+            text: detailSentence.value.content
+        }
+
+        const res = await instance.get('/api/v1/tts/generate', {
+            responseType: 'blob',   // 응답 데이터로 이진 데이터(byte[])를 받기 위해 지정
+            params: requestData
+        });
+
+        
+        // 서버에서 받은 데이터로 Blob 객체 생성
+        const blob = new Blob([res.data], { type: 'audio/mpeg' });  // MIME 타입 지정
+        const url = URL.createObjectURL(blob);  // Blob 객체로 URL 생성 (<audio> 태그의 src 속성으로 사용 가능)
+        console.log('>>', url);
+
+        // audio 객체 생성 및 재생
+        const audio = new Audio(url);
+        audio.play();
+
+        // url 객체 해제 (메모리 관리)
+        audio.onended = () => URL.revokeObjectURL(url);
+    } catch(error) {
+        console.log('TTS 재생 중 오류 발생', error);
+        alert('TTS 재생 중 오류가 발생했습니다.');
+    }
+    
 }
 
 // 문장 수정 모드
