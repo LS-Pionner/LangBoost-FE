@@ -29,7 +29,7 @@
 <script setup>
 import { defineProps, defineEmits, computed, ref } from 'vue';
 import EditModalComponent from '@/components/UI/modals/EditModalComponent.vue';
-import { truncateString } from '@/utils/truncate';
+import { truncateString } from '@/hooks/truncate';
 
 const props = defineProps({
     sentenceSet: {

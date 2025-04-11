@@ -2,10 +2,16 @@
     <div class="sentence-item" @click="toggleMeaning">
         <div class="sentence-header">
             <h3 v-if="visibleMeaningId === null">
+                <i v-if="showMeaning" class="fa-solid fa-volume-high item-button" @click.stop="playKoreanSound"></i>
+                <i v-else class="fa-solid fa-volume-high item-button" @click.stop="playEnglishSound"></i>
+                
                 <span v-if="showMeaning">{{ sentence.meaning }}</span>
                 <span v-else>{{ sentence.content }}</span>
             </h3>
             <h3 v-else>
+                <i v-if="showMeaning" class="fa-solid fa-volume-high item-button" @click.stop="playEnglishSound"></i>
+                <i v-else class="fa-solid fa-volume-high item-button" @click.stop="playKoreanSound"></i>
+
                 <span v-if="showMeaning">{{ sentence.content }}</span>
                 <span v-else>{{ sentence.meaning }}</span>
             </h3>
@@ -32,6 +38,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue';
 import LearningModalComponent from '@/components/UI/modals/LearningModalComponent.vue';
 import router from '@/router';
 import store from '@/store';
+import { useSoundPlay } from '@/hooks/useSoundPlay';
 
 const props = defineProps({
     sentence: {
@@ -53,11 +60,22 @@ const emit = defineEmits(['modifySentence', 'deleteSentence']);
 const activeModalId = ref(null);    // 현재 활성화된 모달창 id
 const visibleMeaningId = ref(null); // 의미를 보여줄 문장 ID
 
+const { soundPlay } = useSoundPlay();   // 컴포저블 함수 사용
+
 // showMeaning이 변경되면 visibleMeaningId를 null로 초기화
 watch(() => props.resetVisibleMeaningId, () => {
     visibleMeaningId.value = null;
 });
 
+// 영어 문장 재생 함수
+const playEnglishSound = () => {
+    soundPlay('ENGLISH', props.sentence.content);
+}
+
+// 한글 문장 재생 함수
+const playKoreanSound = () => {
+    soundPlay('KOREAN', props.sentence.meaning);
+}
 
 // 편집 모달창 열기
 const openEditModal = () => {
@@ -111,15 +129,18 @@ const navigateSentenceDetail = () => {
 .sentence-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+}
+
+.item-button {
+    margin-left: 10px;
+    margin-right: 20px;
 }
 
 .sentence-item h3 {
     margin: 0;
     font-size: 18px;
     color: #333;
-    text-align: center;
-    flex-grow: 1; /* 버튼과의 간격을 조절하기 위해 사용 */
 }
 
 .sentence-button {

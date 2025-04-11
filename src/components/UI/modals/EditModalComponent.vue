@@ -19,7 +19,7 @@
 <script setup>
 import instance from '@/axios';
 import { computed, defineEmits, defineProps, ref } from 'vue';
-import { truncateString } from '@/utils/truncate';
+import { truncateString } from '@/hooks/truncate';
 import ModifyModalComponent from './ModifyModalComponent.vue';
 import store from '@/store';
 
