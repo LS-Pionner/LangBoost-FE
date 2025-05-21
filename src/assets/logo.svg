@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180" height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- L 아이콘 -->
+  <path d="M10 8C10 5.79086 11.7909 4 14 4H20C22.2091 4 24 5.79086 24 8V32C24 34.2091 22.2091 36 20 36H14C11.7909 36 10 34.2091 10 32V8Z" fill="#2196F3"/>
+  <path d="M14 8H20V28H14V8Z" fill="white"/>
+  
+  <!-- Lang 텍스트 -->
+  <path d="M35 12H45V16H35V12Z" fill="#2196F3"/>
+  <path d="M35 20H45V24H35V20Z" fill="#2196F3"/>
+  <path d="M35 28H45V32H35V28Z" fill="#2196F3"/>
+  
+  <path d="M50 12H60V16H50V12Z" fill="#2196F3"/>
+  <path d="M50 20H60V24H50V20Z" fill="#2196F3"/>
+  <path d="M50 28H60V32H50V28Z" fill="#2196F3"/>
+  
+  <path d="M65 12H75V16H65V12Z" fill="#2196F3"/>
+  <path d="M65 20H75V24H65V20Z" fill="#2196F3"/>
+  <path d="M65 28H75V32H65V28Z" fill="#2196F3"/>
+  
+  <path d="M80 12H90V16H80V12Z" fill="#2196F3"/>
+  <path d="M80 20H90V24H80V20Z" fill="#2196F3"/>
+  <path d="M80 28H90V32H80V28Z" fill="#2196F3"/>
+  
+  <!-- Boost 텍스트 -->
+  <path d="M100 12H110V16H100V12Z" fill="#4CAF50"/>
+  <path d="M100 20H110V24H100V20Z" fill="#4CAF50"/>
+  <path d="M100 28H110V32H100V28Z" fill="#4CAF50"/>
+  
+  <path d="M115 12H125V16H115V12Z" fill="#4CAF50"/>
+  <path d="M115 20H125V24H115V20Z" fill="#4CAF50"/>
+  <path d="M115 28H125V32H115V28Z" fill="#4CAF50"/>
+  
+  <path d="M130 12H140V16H130V12Z" fill="#4CAF50"/>
+  <path d="M130 20H140V24H130V20Z" fill="#4CAF50"/>
+  <path d="M130 28H140V32H130V28Z" fill="#4CAF50"/>
+  
+  <path d="M145 12H155V16H145V12Z" fill="#4CAF50"/>
+  <path d="M145 20H155V24H145V20Z" fill="#4CAF50"/>
+  <path d="M145 28H155V32H145V28Z" fill="#4CAF50"/>
+  
+  <path d="M160 12H170V16H160V12Z" fill="#4CAF50"/>
+  <path d="M160 20H170V24H160V20Z" fill="#4CAF50"/>
+  <path d="M160 28H170V32H160V28Z" fill="#4CAF50"/>
+</svg> 

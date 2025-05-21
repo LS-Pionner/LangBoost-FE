@@ -2,14 +2,14 @@
   <div>
     <!-- 메인 콘텐츠 -->
     <div class="home-content">
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main page of the application.</p>
+      <h1>OPIC 랜덤 질문</h1>
+      <OPICQuestionBox />
     </div>
   </div>
 </template>
 
 <script setup>
-
+import OPICQuestionBox from "@/components/features/OPICQuestionBox.vue";
 </script>
 
 <style scoped>
@@ -20,7 +20,9 @@
 }
 
 h1 {
-  color: #42b983;
+  color: #2196f3;
+  margin-bottom: 30px;
+  font-weight: 600;
 }
 
 p {
